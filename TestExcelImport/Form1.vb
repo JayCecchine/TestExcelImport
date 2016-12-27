@@ -4,40 +4,45 @@ Public Class Form1
 
     Sub TestExcelImport()
 
+        Dim openFile = New OpenFileDialog
+        openFile.Title = "Select an Excel File"
+        openFile.Filter = "Excel Files|*.xls;*.xlsx|All Files|*.*"
+        If openFile.ShowDialog() <> True Then
+            Return
+        End If
 
-        Dim table As System.Data.DataTable = GetTable()
-        ' Create new Application.
-        Dim excel As Application = New Application
-        Dim table1 As New System.Data.DataTable
-        ' Open Excel spreadsheet.
-        Dim FilePath = OpenFileDialog1.FileName
-        Dim w As Workbook = excel.Workbooks.Open(FilePath)
+        Dim xl As New Microsoft.Office.Interop.Excel.Application
+        Dim xlBooks As Workbooks = xl.Workbooks
+        Dim thisFile As Workbook = xlBooks.Open(openFile.FileName)
+        Dim returnSet As New DataSet
 
-        For i As Integer = 0 To w.Worksheets.Count
+        For s As Integer = 1 To thisFile.Sheets.Count
+            Dim returnTable As New System.Data.DataTable
+            returnTable.TableName = String.Format("Table{0}", s)
+            Dim firstSheet As Range = thisFile.Sheets(s).UsedRange
+            For c As Integer = 1 To firstSheet.Columns.Count
+                Dim newCol As New DataColumn
+                newCol.ColumnName = String.Format("Column{0}", c)
+                returnTable.Columns.Add(newCol)
+            Next
 
+            For r As Integer = 1 To firstSheet.Rows.Count
+                Dim newRow As DataRow = returnTable.NewRow()
+                For c As Integer = 1 To firstSheet.Columns.Count
+                    newRow(c - 1) = firstSheet.Cells(r, c).Value.ToString()
+                Next
+                returnTable.Rows.Add(newRow)
+                Console.WriteLine(String.Format("Read {0} row(s) from sheet {1}.", r - 1, s))
+            Next
+            returnSet.Tables.Add(returnTable)
 
-            Dim sheet As Worksheet = w.Sheets(1)
-
-            Dim r As Range = sheet.UsedRange
-
-            'Get used range of selected sheet
-            'Make a for loop array that gets the data type and value of 
-            '   the selected cell, i.e 1,1 , would minus by -1 
-            '       and convert into a data table via add row.
-            'Figure out how to create the columns, as the columns decide
-            'http://stackoverflow.com/questions/23004274/vb-net-excel-worksheet-cells-value
-            'table.Columns.AddRange()
-
-            ' Dim array(,) As Object = r.Value(XlRangeValueDataType.xlRangeValueDefault)
-
-
-            'Dim c As String = w.Sheets(1).range(r).Value.ToString()
-            'TextBox2.Text = c
-
-            'Have to figure out how to construct a data tabel from the excel file.
-            'this might help http://stackoverflow.com/questions/14261655/best-fastest-way-to-read-an-excel-sheet-into-a-datatable
-            'Dim b As String = w.Sheets(1).Cells(1, 1).Value.ToString()
         Next
+
+        DataGridView1.DataSource = returnSet.Tables("Sheet1").DefaultView 'Or whatever
+
+        thisFile.Close()
+        xlBooks.Close()
+        xl.Quit()
 
 
 
@@ -45,7 +50,6 @@ Public Class Form1
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        DataGridView1.DataSource = GetTable()
         Try
             TestExcelImport()
         Catch ex As Exception
@@ -64,22 +68,22 @@ Public Class Form1
     End Function
     Function GetTable() As System.Data.DataTable
         ' Create new DataTable instance.
-        Dim table As New System.Data.DataTable
+        Dim pharmacy As New System.Data.DataTable
 
         '' Create four typed columns in the DataTable.
-        table.Columns.Add("Dosage", GetType(Integer))
-        table.Columns.Add("Drug", GetType(String))
-        table.Columns.Add("Patient", GetType(String))
-        table.Columns.Add("Date", GetType(DateTime))
+        pharmacy.Columns.Add("Dosage", GetType(Integer))
+        pharmacy.Columns.Add("Drug", GetType(String))
+        pharmacy.Columns.Add("Patient", GetType(String))
+        pharmacy.Columns.Add("Date", GetType(DateTime))
 
 
         ' Add five rows with those columns filled in the DataTable.
-        table.Rows.Add(25, "Indocin", "David", DateTime.Now)
-        table.Rows.Add(50, "Enebrel", "Sam", DateTime.Now)
-        table.Rows.Add(10, "Hydralazine", "Christoff", DateTime.Now)
-        table.Rows.Add(21, "Combivent", "Janet", DateTime.Now)
-        table.Rows.Add(100, "Dilantin", "Melanie", DateTime.Now)
-        Return table
+        pharmacy.Rows.Add(25, "Indocin", "David", DateTime.Now)
+        pharmacy.Rows.Add(50, "Enebrel", "Sam", DateTime.Now)
+        pharmacy.Rows.Add(10, "Hydralazine", "Christoff", DateTime.Now)
+        pharmacy.Rows.Add(21, "Combivent", "Janet", DateTime.Now)
+        pharmacy.Rows.Add(100, "Dilantin", "Melanie", DateTime.Now)
+        Return pharmacy
     End Function
 
     Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
