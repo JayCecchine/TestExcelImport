@@ -25,7 +25,7 @@ Public Class Form1
             '   the selected cell, i.e 1,1 , would minus by -1 
             '       and convert into a data table via add row.
             'Figure out how to create the columns, as the columns decide
-
+            'http://stackoverflow.com/questions/23004274/vb-net-excel-worksheet-cells-value
             'table.Columns.AddRange()
 
             ' Dim array(,) As Object = r.Value(XlRangeValueDataType.xlRangeValueDefault)
