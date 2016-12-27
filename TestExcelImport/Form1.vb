@@ -44,14 +44,77 @@ Public Class Form1
         xlBooks.Close()
         xl.Quit()
 
+    End Sub
+
+    Sub TestExcelImport2()
+        
+        ' Open Excel spreadsheet.
+        'Dim FilePath = OpenFileDialog1.FileName
+        Dim openFile = New OpenFileDialog
+        openFile.Title = "Select an Excel File"
+        openFile.Filter = "Excel Files|*.xls;*.xlsx|All Files|*.*"
+        If openFile.ShowDialog() <> DialogResult.OK Then
+            Return
+        End If
+
+        ' Create new Application.
+        Dim excel As Application = New Application
+        Dim w As Workbook = excel.Workbooks.Open(openFile.FileName)
+        Dim jasonsSet As New DataSet
+
+        For i As Integer = 1 To w.Sheets.Count
+
+            Dim sheet As Worksheet = w.Sheets(i)
+            Dim newTable As New System.Data.DataTable
+            newTable.TableName = String.Format("Sheet{0}", i)
+            Dim thisRange As Range = sheet.UsedRange
 
 
+            For x As Integer = 1 To thisRange.Columns.Count
+                Dim newCol As New DataColumn
+                newCol.ColumnName = String.Format("Column{0}", x)
+                newTable.Columns.Add(newCol)
+            Next
+            For r As Integer = 1 To thisRange.Rows.Count
+                Dim newRow As DataRow = newTable.NewRow()
+                For c As Integer = 1 To thisRange.Columns.Count
+                    newRow(c - 1) = thisRange.Cells(r, c).Value.ToString()
+                Next
+                newTable.Rows.Add(newRow)
+            Next
+            jasonsSet.Tables.Add(newTable)
+        Next
+
+        ' Dim array(,) As Object = r.Value(XlRangeValueDataType.xlRangeValueDefault)
+        'Get used range of selected sheet
+        'Make a for loop array that gets the data type and value of 
+        '   the selected cell, i.e 1,1 , would minus by -1 
+        '       and convert into a data table via add row.
+        'Figure out how to create the columns, as the columns decide
+        'http://stackoverflow.com/questions/23004274/vb-net-excel-worksheet-cells-value
+        'table.Columns.AddRange()
+
+        ' Dim array(,) As Object = r.Value(XlRangeValueDataType.xlRangeValueDefault)
+
+
+        'Dim c As String = w.Sheets(1).range(r).Value.ToString()
+        'TextBox2.Text = c
+
+        'Have to figure out how to construct a data tabel from the excel file.
+        'this might help http://stackoverflow.com/questions/14261655/best-fastest-way-to-read-an-excel-sheet-into-a-datatable
+
+
+
+        DataGridView1.DataSource = jasonsSet.Tables(0)
+        w.Close()
+        excel.Quit()
 
     End Sub
 
+
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         Try
-            TestExcelImport()
+            TestExcelImport2()
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
