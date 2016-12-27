@@ -15,12 +15,24 @@ Public Class Form1
 
         For i As Integer = 0 To w.Worksheets.Count
 
+
             Dim sheet As Worksheet = w.Sheets(1)
+
             Dim r As Range = sheet.UsedRange
+
+            'Get used range of selected sheet
+            'Make a for loop array that gets the data type and value of 
+            '   the selected cell, i.e 1,1 , would minus by -1 
+            '       and convert into a data table via add row.
+            'Figure out how to create the columns, as the columns decide
+
+            'table.Columns.AddRange()
+
             ' Dim array(,) As Object = r.Value(XlRangeValueDataType.xlRangeValueDefault)
 
 
-            Dim c As String = w.Sheets(1).range("A3").Value.ToString()
+            'Dim c As String = w.Sheets(1).range(r).Value.ToString()
+            'TextBox2.Text = c
 
             'Have to figure out how to construct a data tabel from the excel file.
             'this might help http://stackoverflow.com/questions/14261655/best-fastest-way-to-read-an-excel-sheet-into-a-datatable
@@ -44,7 +56,12 @@ Public Class Form1
     Private Sub DataGridView1_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView1.CellContentClick
 
     End Sub
+    Function TestTable() As System.Data.DataTable
+        Dim tt As New System.Data.DataTable
 
+        tt.Columns.Add("An", GetType(String))
+        tt.Columns.Add("ba", GetType(String))
+    End Function
     Function GetTable() As System.Data.DataTable
         ' Create new DataTable instance.
         Dim table As New System.Data.DataTable
