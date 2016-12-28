@@ -5,13 +5,13 @@ Public Class Form1
     value As String
 ) As Boolean
     End Function
-    Sub TestExcelImport()
+    Function TestExcelImport()
 
         Dim openFile = New OpenFileDialog
         openFile.Title = "Select an Excel File"
         openFile.Filter = "Excel Files|*.xls;*.xlsx|All Files|*.*"
         If openFile.ShowDialog() <> DialogResult.OK Then
-            Return
+            Return Nothing
         End If
 
         Dim xl As New Microsoft.Office.Interop.Excel.Application
@@ -33,7 +33,7 @@ Public Class Form1
                 Dim newRow As DataRow = returnTable.NewRow()
                 For c As Integer = 1 To firstSheet.Columns.Count
 
-                    If IsNullOrEmpty(firstSheet.Cells(r, c).Value.ToString()) Then
+                    If firstSheet.Cells(r, c).Value2 = Nothing Then
                         newRow(c - 1) = ""
                     Else
                         newRow(c - 1) = firstSheet.Cells(r, c).Value.ToString()
@@ -47,13 +47,13 @@ Public Class Form1
 
         Next
 
-        DataGridView1.DataSource = returnSet.Tables("Sheet1").DefaultView 'Or whatever
+        DataGridView1.DataSource = returnSet.Tables(0).DefaultView 'Or whatever
 
         thisFile.Close()
         xlBooks.Close()
         xl.Quit()
 
-    End Sub
+    End Function
 
 
 
