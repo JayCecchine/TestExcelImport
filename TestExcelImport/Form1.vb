@@ -10,25 +10,30 @@ Public Class Form1
         Dim openFile = New OpenFileDialog
         openFile.Title = "Select an Excel File"
         openFile.Filter = "Excel Files|*.xls;*.xlsx|All Files|*.*"
+
+        'If use does not hit ok when selecting file, function does nothing
         If openFile.ShowDialog() <> DialogResult.OK Then
             Return Nothing
         End If
 
+        'Selecting the excel application, using the workbooks, selecting an excel file
         Dim xl As New Microsoft.Office.Interop.Excel.Application
         Dim xlBooks As Workbooks = xl.Workbooks
         Dim thisFile As Workbook = xlBooks.Open(openFile.FileName)
         Dim returnSet As New DataSet
 
+        'For every sheet, create a new data table that is called Table1,2,3 etc
         For s As Integer = 1 To thisFile.Sheets.Count
             Dim returnTable As New System.Data.DataTable
             returnTable.TableName = String.Format("Table{0}", s)
             Dim firstSheet As Range = thisFile.Sheets(s).UsedRange
+            'Create a new column in the data table for every column in excel sheet
             For c As Integer = 1 To firstSheet.Columns.Count
                 Dim newCol As New DataColumn
                 newCol.ColumnName = String.Format("Column{0}", c)
                 returnTable.Columns.Add(newCol)
             Next
-
+            'Create a new row
             For r As Integer = 1 To firstSheet.Rows.Count
                 Dim newRow As DataRow = returnTable.NewRow()
                 For c As Integer = 1 To firstSheet.Columns.Count
