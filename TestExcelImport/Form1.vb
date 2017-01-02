@@ -1,6 +1,8 @@
 ﻿Imports Microsoft.Office.Interop.Excel
 Imports System.Data
 Public Class Form1
+    Dim returnSet As New DataSet
+
     Public Shared Function IsNullOrEmpty(
     value As String
 ) As Boolean
@@ -20,7 +22,7 @@ Public Class Form1
         Dim xl As New Microsoft.Office.Interop.Excel.Application
         Dim xlBooks As Workbooks = xl.Workbooks
         Dim thisFile As Workbook = xlBooks.Open(openFile.FileName)
-        Dim returnSet As New DataSet
+
 
         'For every sheet, create a new data table that is called Table1,2,3 etc
         For s As Integer = 1 To thisFile.Sheets.Count
@@ -60,9 +62,22 @@ Public Class Form1
 
     End Function
 
+    Function TestDataRetrieval()
+
+        Dim s = returnSet.Tables(0)
+
+        If s.Rows(1).Item(1) IsNot Nothing Then         'And s.Rows(1).Item(1) > 0 Then
+            TextBox2.Text = String.Format("Update tblmenuitems Set price1 = {0} where itemnum in (100-111)", s.Rows(1).Item(1))
+        End If
+        'Else
+        '   TextBox2.Text = ""
+        ' End If
+
+    End Function
 
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim testForm As Form = New Form
         Try
             TestExcelImport()
         Catch ex As Exception
@@ -73,12 +88,7 @@ Public Class Form1
     Private Sub DataGridView1_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView1.CellContentClick
 
     End Sub
-    Function TestTable() As System.Data.DataTable
-        Dim tt As New System.Data.DataTable
 
-        tt.Columns.Add("An", GetType(String))
-        tt.Columns.Add("ba", GetType(String))
-    End Function
 
     Sub Button2_Click(sender As Object, e As EventArgs)
 
@@ -86,5 +96,13 @@ Public Class Form1
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+    End Sub
+
+    Private Sub Button2_Click_1(sender As Object, e As EventArgs) Handles Button2.Click
+        Try
+            TestDataRetrieval()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
     End Sub
 End Class
