@@ -68,7 +68,7 @@ Public Class Form1
         Dim s = returnSet.Tables(0)
 
         If s.Rows(1).Item(1) IsNot "" Then         'And s.Rows(1).Item(1) > 0 Then
-            TextBox2.Text = String.Format("Update tblmenuitems Set price1 = ' {0}' where itemnum in (100-111)", s.Rows(1).Item(1))
+            TextBox2.Text = String.Format("Update tblmenuitems Set price1 = '{0}' where itemnum in (100-111)", s.Rows(1).Item(1))
         End If
 
         Dim modSet As New DataSet
