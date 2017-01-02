@@ -74,11 +74,18 @@ Public Class Form1
         Dim modSet As New DataSet
         Dim modTable As New System.Data.DataTable
         Dim r = returnSet.Tables(0)
+        Dim newCol = New DataColumn
+        Dim newRow = modTable.NewRow()
 
+        'Creating the new DataTable
+        '   Creating the predefined columns
         modTable.Columns.Add("Regular")
         modTable.Columns.Add("Sub Total")
         modTable.Columns.Add("Delivery Fee")
 
+        'Filling the necessary data from the returnSet
+        '   
+        ' newRow(r.Rows(1).Item(0), r.Rows(1).Item(1), r.Rows(1).Item(2))
         modTable.Rows.Add(r.Rows(1).Item(0), r.Rows(1).Item(1), r.Rows(1).Item(2))
         modSet.Tables.Add(modTable)
 
