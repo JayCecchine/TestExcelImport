@@ -64,11 +64,29 @@ Public Class Form1
 
     Function TestDataRetrieval()
 
+
         Dim s = returnSet.Tables(0)
 
-        If s.Rows(1).Item(1) IsNot Nothing Then         'And s.Rows(1).Item(1) > 0 Then
-            TextBox2.Text = String.Format("Update tblmenuitems Set price1 = '{0}' where itemnum in (100-111)", s.Rows(1).Item(1))
+        If s.Rows(1).Item(1) IsNot "" Then         'And s.Rows(1).Item(1) > 0 Then
+            TextBox2.Text = String.Format("Update tblmenuitems Set price1 = ' {0}' where itemnum in (100-111)", s.Rows(1).Item(1))
         End If
+
+        Dim modSet As New DataSet
+        Dim modTable As New System.Data.DataTable
+        Dim r = returnSet.Tables(0)
+
+        modTable.Columns.Add("Regular")
+        modTable.Columns.Add("Sub Total")
+        modTable.Columns.Add("Delivery Fee")
+
+        modTable.Rows.Add(r.Rows(1).Item(0), r.Rows(1).Item(1), r.Rows(1).Item(2))
+        modSet.Tables.Add(modTable)
+
+        Form2.Show()
+        Form2.DataGridView1.DataSource = modSet.Tables(0).DefaultView
+
+
+
         'Else
         '   TextBox2.Text = ""
         ' End If
