@@ -65,7 +65,7 @@ Partial Class Form1
         '
         Me.Button2.Location = New System.Drawing.Point(8, 19)
         Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(19, 20)
+        Me.Button2.Size = New System.Drawing.Size(31, 28)
         Me.Button2.TabIndex = 5
         Me.Button2.Text = "Button2"
         Me.Button2.UseVisualStyleBackColor = True

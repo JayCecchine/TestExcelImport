@@ -67,11 +67,18 @@ Public Class Form1
         Dim s = returnSet.Tables(0)
 
         If s.Rows(1).Item(1) IsNot Nothing Then         'And s.Rows(1).Item(1) > 0 Then
-            TextBox2.Text = String.Format("Update tblmenuitems Set price1 = {0} where itemnum in (100-111)", s.Rows(1).Item(1))
+            TextBox2.Text = String.Format("Update tblmenuitems Set price1 = '{0}' where itemnum in (100-111)", s.Rows(1).Item(1))
         End If
         'Else
         '   TextBox2.Text = ""
         ' End If
+
+        'Parse Excel File for values, add them if they're not null or 0
+        'associate them with variables
+        'compile variables into a data table that is user friendly
+        '   ask user if data is correct, if not, allow for user to override pre-existing values
+        '       Take new acquired data from data table, generate necessary scripts for end user
+
 
     End Function
 
