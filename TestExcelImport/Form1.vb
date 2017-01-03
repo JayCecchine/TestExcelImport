@@ -82,12 +82,38 @@ Public Class Form1
         modTable.Columns.Add("Regular")
         modTable.Columns.Add("Sub Total")
         modTable.Columns.Add("Delivery Fee")
+        modTable.Columns.Add("Catering")
+        modTable.Columns.Add("Sub Total")
+        modTable.Columns.Add("Delivery Fee")
 
         'Filling the necessary data from the returnSet
         '   
-        ' newRow(r.Rows(1).Item(0), r.Rows(1).Item(1), r.Rows(1).Item(2))
+        'Item Name / Subtotal / Del Fee  Catering Item / Subtotal / Del Fee
         modTable.Rows.Add(r.Rows(1).Item(0), r.Rows(1).Item(1), r.Rows(1).Item(2))
+        modTable.Rows.Add(r.Rows(2).Item(0), r.Rows(2).Item(1), r.Rows(2).Item(2))
+        modTable.Rows.Add(r.Rows(3).Item(0), r.Rows(3).Item(1), r.Rows(3).Item(2))
+        modTable.Rows.Add(r.Rows(4).Item(0), r.Rows(4).Item(1), r.Rows(4).Item(2))
+        modTable.Rows.Add(r.Rows(5).Item(0), r.Rows(5).Item(1), r.Rows(5).Item(2))
+        modTable.Rows.Add(r.Rows(6).Item(0), r.Rows(6).Item(1), r.Rows(6).Item(2))
+        modTable.Rows.Add(r.Rows(7).Item(0), r.Rows(7).Item(1), r.Rows(7).Item(2))
+        modTable.Rows.Add(r.Rows(8).Item(0), r.Rows(8).Item(1), r.Rows(8).Item(2))
+        modTable.Rows.Add(r.Rows(9).Item(0), r.Rows(9).Item(1), r.Rows(9).Item(2))
+        modTable.Rows.Add(r.Rows(10).Item(0), r.Rows(10).Item(1), r.Rows(10).Item(2))
+        modTable.Rows.Add(r.Rows(11).Item(0), r.Rows(11).Item(1), r.Rows(11).Item(2))
+        modTable.Rows.Add(r.Rows(12).Item(0), r.Rows(12).Item(1), r.Rows(12).Item(2))
+        modTable.Rows.Add(r.Rows(13).Item(0), r.Rows(13).Item(1), r.Rows(13).Item(2))
+        modTable.Rows.Add(r.Rows(14).Item(0), r.Rows(14).Item(1), r.Rows(14).Item(2))
+        modTable.Rows.Add(r.Rows(15).Item(0), r.Rows(15).Item(1), r.Rows(15).Item(2))
+        modTable.Rows.Add(r.Rows(16).Item(0), r.Rows(16).Item(1), r.Rows(16).Item(2))
+        modTable.Rows.Add(r.Rows(17).Item(0), r.Rows(17).Item(1), r.Rows(17).Item(2))
+
+
         modSet.Tables.Add(modTable)
+
+        'Dim Temp As New Form
+        'Dim Grid As New DataGridView
+
+        'Temp.Show(Grid.DataSource = modSet.Tables(0).DefaultView)
 
         Form2.Show()
         Form2.DataGridView1.DataSource = modSet.Tables(0).DefaultView
