@@ -2,6 +2,7 @@
 Imports System.Data
 Public Class Form1
     Dim returnSet As New DataSet
+    Dim modSet As New DataSet
 
     Public Shared Function IsNullOrEmpty(
     value As String
@@ -71,7 +72,7 @@ Public Class Form1
             TextBox2.Text = String.Format("Update tblmenuitems Set price1 = '{0}' where itemnum in (100-111)", s.Rows(1).Item(1))
         End If
 
-        Dim modSet As New DataSet
+
         Dim modTable As New System.Data.DataTable
         Dim r = returnSet.Tables(0)
         Dim newCol = New DataColumn
@@ -83,46 +84,61 @@ Public Class Form1
         modTable.Columns.Add("Sub Total")
         modTable.Columns.Add("Delivery Fee")
         modTable.Columns.Add("Catering")
-        modTable.Columns.Add("Sub Total")
-        modTable.Columns.Add("Delivery Fee")
+        modTable.Columns.Add("Cat Sub Total")
+        modTable.Columns.Add("Cat Delivery Fee")
 
         'Filling the necessary data from the returnSet
         '   
         'Item Name / Subtotal / Del Fee  Catering Item / Subtotal / Del Fee
-        modTable.Rows.Add(r.Rows(1).Item(0), r.Rows(1).Item(1), r.Rows(1).Item(2))
-        modTable.Rows.Add(r.Rows(2).Item(0), r.Rows(2).Item(1), r.Rows(2).Item(2))
-        modTable.Rows.Add(r.Rows(3).Item(0), r.Rows(3).Item(1), r.Rows(3).Item(2))
-        modTable.Rows.Add(r.Rows(4).Item(0), r.Rows(4).Item(1), r.Rows(4).Item(2))
-        modTable.Rows.Add(r.Rows(5).Item(0), r.Rows(5).Item(1), r.Rows(5).Item(2))
-        modTable.Rows.Add(r.Rows(6).Item(0), r.Rows(6).Item(1), r.Rows(6).Item(2))
-        modTable.Rows.Add(r.Rows(7).Item(0), r.Rows(7).Item(1), r.Rows(7).Item(2))
-        modTable.Rows.Add(r.Rows(8).Item(0), r.Rows(8).Item(1), r.Rows(8).Item(2))
-        modTable.Rows.Add(r.Rows(9).Item(0), r.Rows(9).Item(1), r.Rows(9).Item(2))
-        modTable.Rows.Add(r.Rows(10).Item(0), r.Rows(10).Item(1), r.Rows(10).Item(2))
-        modTable.Rows.Add(r.Rows(11).Item(0), r.Rows(11).Item(1), r.Rows(11).Item(2))
+        modTable.Rows.Add(r.Rows(1).Item(0), r.Rows(1).Item(1), r.Rows(1).Item(2), r.Rows(19).Item(0), r.Rows(19).Item(1), r.Rows(19).Item(2))
+        modTable.Rows.Add(r.Rows(2).Item(0), r.Rows(2).Item(1), r.Rows(2).Item(2), r.Rows(20).Item(0), r.Rows(20).Item(1), r.Rows(20).Item(2))
+        modTable.Rows.Add(r.Rows(3).Item(0), r.Rows(3).Item(1), r.Rows(3).Item(2), r.Rows(21).Item(0), r.Rows(21).Item(1), r.Rows(21).Item(2))
+        modTable.Rows.Add(r.Rows(4).Item(0), r.Rows(4).Item(1), r.Rows(4).Item(2), r.Rows(22).Item(0), r.Rows(22).Item(1), r.Rows(22).Item(2))
+        modTable.Rows.Add(r.Rows(5).Item(0), r.Rows(5).Item(1), r.Rows(5).Item(2), r.Rows(23).Item(0), r.Rows(23).Item(1), r.Rows(23).Item(2))
+        modTable.Rows.Add(r.Rows(6).Item(0), r.Rows(6).Item(1), r.Rows(6).Item(2), r.Rows(24).Item(0), r.Rows(24).Item(1), r.Rows(24).Item(2))
+        modTable.Rows.Add(r.Rows(7).Item(0), r.Rows(7).Item(1), r.Rows(7).Item(2), r.Rows(25).Item(0), r.Rows(25).Item(1), r.Rows(25).Item(2))
+        modTable.Rows.Add(r.Rows(8).Item(0), r.Rows(8).Item(1), r.Rows(8).Item(2), r.Rows(26).Item(0), r.Rows(26).Item(1), r.Rows(26).Item(2))
+        modTable.Rows.Add(r.Rows(9).Item(0), r.Rows(9).Item(1), r.Rows(9).Item(2), r.Rows(27).Item(0), r.Rows(27).Item(1), r.Rows(27).Item(2))
+        modTable.Rows.Add(r.Rows(10).Item(0), r.Rows(10).Item(1), r.Rows(10).Item(2), r.Rows(28).Item(0), r.Rows(28).Item(1), r.Rows(28).Item(2))
+        modTable.Rows.Add(r.Rows(11).Item(0), r.Rows(11).Item(1), r.Rows(11).Item(2), r.Rows(29).Item(0), r.Rows(29).Item(1), r.Rows(29).Item(2))
         modTable.Rows.Add(r.Rows(12).Item(0), r.Rows(12).Item(1), r.Rows(12).Item(2))
-        modTable.Rows.Add(r.Rows(13).Item(0), r.Rows(13).Item(1), r.Rows(13).Item(2))
-        modTable.Rows.Add(r.Rows(14).Item(0), r.Rows(14).Item(1), r.Rows(14).Item(2))
-        modTable.Rows.Add(r.Rows(15).Item(0), r.Rows(15).Item(1), r.Rows(15).Item(2))
-        modTable.Rows.Add(r.Rows(16).Item(0), r.Rows(16).Item(1), r.Rows(16).Item(2))
-        modTable.Rows.Add(r.Rows(17).Item(0), r.Rows(17).Item(1), r.Rows(17).Item(2))
+        modTable.Rows.Add(r.Rows(13).Item(0), r.Rows(13).Item(1), r.Rows(13).Item(2), "Delivery Cap:", r.Rows(2).Item(10))
+        modTable.Rows.Add(r.Rows(14).Item(0), r.Rows(14).Item(1), r.Rows(14).Item(2), "Flat Del Fee:", r.Rows(4).Item(10))
+        modTable.Rows.Add(r.Rows(15).Item(0), r.Rows(15).Item(1), r.Rows(15).Item(2), "Use Cat Fees:", r.Rows(6).Item(10))
+        modTable.Rows.Add(r.Rows(16).Item(0), r.Rows(16).Item(1), r.Rows(16).Item(2), "Tax Del Fees:", r.Rows(9).Item(10))
+        modTable.Rows.Add(r.Rows(17).Item(0), r.Rows(17).Item(1), r.Rows(17).Item(2), "Tax Cat Fees:", r.Rows(11).Item(10))
 
 
         modSet.Tables.Add(modTable)
 
         'Dim Temp As New Form
         'Dim Grid As New DataGridView
+        'Grid.DataSource = modSet.Tables(0).DefaultView
 
-        'Temp.Show(Grid.DataSource = modSet.Tables(0).DefaultView)
-
-        Form2.Show()
+        'Temp.Show(Grid)
         Form2.DataGridView1.DataSource = modSet.Tables(0).DefaultView
 
 
 
-        'Else
-        '   TextBox2.Text = ""
-        ' End If
+
+
+        'Loop that resizes the form according to the size of the datagridview
+        'Dim Width As Integer
+        'For Each dgvcc As DataGridViewColumn In DataGridView1.Columns
+        '    Width += dgvcc.Width
+        'Next
+        'Dim Height As Integer
+        'For Each dgvcc As DataGridViewRow In DataGridView1.Rows
+        '    Height += dgvcc.Height
+        'Next
+
+        DataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
+        DataGridView1.AutoResizeColumns()
+
+        ' Form2.Height = Height
+        'Form2.Width = Width
+        Form2.Show()
+
 
         'Parse Excel File for values, add them if they're not null or 0
         'associate them with variables
@@ -135,7 +151,9 @@ Public Class Form1
 
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        Dim testForm As Form = New Form
+        returnSet.Tables.Clear()
+        modSet.Tables.Clear()
+        Form2.Hide()
         Try
             TestExcelImport()
         Catch ex As Exception
