@@ -116,6 +116,8 @@ Public Class Form1
         'Grid.DataSource = modSet.Tables(0).DefaultView
 
         'Temp.Show(Grid)
+
+
         Form2.DataGridView1.DataSource = modSet.Tables(0).DefaultView
 
 
@@ -134,6 +136,17 @@ Public Class Form1
 
         DataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
         DataGridView1.AutoResizeColumns()
+
+
+        Form2.Button1.Text = "butts"
+        If Form2.Button1.PerformClick = True Then
+            modSet.Tables(0).GetChanges()
+            modSet.Tables(0).AcceptChanges()
+            Form2.Hide()
+        End If
+
+
+
 
         ' Form2.Height = Height
         'Form2.Width = Width
