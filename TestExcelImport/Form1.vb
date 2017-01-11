@@ -55,7 +55,7 @@ Public Class Form1
 
         Next
 
-        DataGridView1.DataSource = returnSet.Tables(0).DefaultView 'Or whatever
+        'DataGridView1.DataSource = returnSet.Tables(0).DefaultView 'Or whatever
 
         thisFile.Close()
         xlBooks.Close()
@@ -65,18 +65,19 @@ Public Class Form1
 
     Function TestDataRetrieval()
 
-
+        Button3.Show()
         Dim s = returnSet.Tables(0)
 
-        If s.Rows(1).Item(1) IsNot "" Then         'And s.Rows(1).Item(1) > 0 Then
-            TextBox2.Text = String.Format("Update tblmenuitems Set price1 = '{0}' where itemnum in (100-111)", s.Rows(1).Item(1))
-        End If
+        'If s.Rows(1).Item(1) IsNot "" Then         'And s.Rows(1).Item(1) > 0 Then
+        '    TextBox2.Text = String.Format("Update tblmenuitems Set price1 = '{0}' where itemnum in (100-111)", s.Rows(1).Item(1))
+        'End If
 
 
         Dim modTable As New System.Data.DataTable
         Dim r = returnSet.Tables(0)
         Dim newCol = New DataColumn
         Dim newRow = modTable.NewRow()
+
 
         'Creating the new DataTable
         '   Creating the predefined columns
@@ -108,8 +109,11 @@ Public Class Form1
         modTable.Rows.Add(r.Rows(16).Item(0), r.Rows(16).Item(1), r.Rows(16).Item(2), "Tax Del Fees:", r.Rows(9).Item(10))
         modTable.Rows.Add(r.Rows(17).Item(0), r.Rows(17).Item(1), r.Rows(17).Item(2), "Tax Cat Fees:", r.Rows(11).Item(10))
 
-
         modSet.Tables.Add(modTable)
+
+
+
+
 
         'Dim Temp As New Form
         'Dim Grid As New DataGridView
@@ -118,39 +122,17 @@ Public Class Form1
         'Temp.Show(Grid)
 
 
-        Form2.DataGridView1.DataSource = modSet.Tables(0).DefaultView
-
-
-
-
-
-        'Loop that resizes the form according to the size of the datagridview
-        'Dim Width As Integer
-        'For Each dgvcc As DataGridViewColumn In DataGridView1.Columns
-        '    Width += dgvcc.Width
-        'Next
-        'Dim Height As Integer
-        'For Each dgvcc As DataGridViewRow In DataGridView1.Rows
-        '    Height += dgvcc.Height
-        'Next
+        DataGridView1.DataSource = modSet.Tables(0).DefaultView
 
         DataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
         DataGridView1.AutoResizeColumns()
 
-
-        Form2.Button1.Text = "butts"
-        If Form2.Button1.PerformClick = True Then
-            modSet.Tables(0).GetChanges()
-            modSet.Tables(0).AcceptChanges()
-            Form2.Hide()
-        End If
-
-
-
+        '    modSet.Tables(0).GetChanges()
+        '    modSet.Tables(0).AcceptChanges()
 
         ' Form2.Height = Height
         'Form2.Width = Width
-        Form2.Show()
+        'Form2.Show()
 
 
         'Parse Excel File for values, add them if they're not null or 0
@@ -158,17 +140,89 @@ Public Class Form1
         'compile variables into a data table that is user friendly
         '   ask user if data is correct, if not, allow for user to override pre-existing values
         '       Take new acquired data from data table, generate necessary scripts for end user
-
-
     End Function
+    Function PriceScripts()
+        modSet.GetChanges()
+        modSet.AcceptChanges()
+        Dim u As String = "update tblMenuItems where itemnum in"
+        Dim m = modSet.Tables(0)
+
+
+        'Regular Prices
+        TextBox3.Text =
+        m.Rows(0).Item(1).ToString()
+        m.Rows(1).Item(1).ToString()
+        m.Rows(2).Item(1).ToString()
+        m.Rows(3).Item(1).ToString()
+        m.Rows(4).Item(1).ToString()
+        m.Rows(5).Item(1).ToString()
+        m.Rows(6).Item(1).ToString()
+        m.Rows(7).Item(1).ToString()
+        m.Rows(8).Item(1).ToString()
+        m.Rows(9).Item(1).ToString()
+        m.Rows(10).Item(1).ToString()
+        m.Rows(11).Item(1).ToString()
+        m.Rows(12).Item(1).ToString()
+        m.Rows(13).Item(1).ToString()
+        m.Rows(14).Item(1).ToString()
+        m.Rows(15).Item(1).ToString()
+        m.Rows(16).Item(1).ToString()
+
+        'Regular Del Fees
+        m.Rows(0).Item(2).ToString()
+        m.Rows(1).Item(2).ToString()
+        m.Rows(2).Item(2).ToString()
+        m.Rows(3).Item(2).ToString()
+        m.Rows(4).Item(2).ToString()
+        m.Rows(5).Item(2).ToString()
+        m.Rows(6).Item(2).ToString()
+        m.Rows(7).Item(2).ToString()
+        m.Rows(8).Item(2).ToString()
+        m.Rows(9).Item(2).ToString()
+        m.Rows(10).Item(2).ToString()
+        m.Rows(11).Item(2).ToString()
+        m.Rows(12).Item(2).ToString()
+        m.Rows(13).Item(2).ToString()
+        m.Rows(14).Item(2).ToString()
+        m.Rows(15).Item(2).ToString()
+        m.Rows(16).Item(2).ToString()
+
+        'Catering Prices
+        m.Rows(0).Item(4).ToString()
+        m.Rows(1).Item(4).ToString()
+        m.Rows(2).Item(4).ToString()
+        m.Rows(3).Item(4).ToString()
+        m.Rows(4).Item(4).ToString()
+        m.Rows(5).Item(4).ToString()
+        m.Rows(6).Item(4).ToString()
+        m.Rows(7).Item(4).ToString()
+        m.Rows(8).Item(4).ToString()
+        m.Rows(9).Item(4).ToString()
+        m.Rows(10).Item(4).ToString()
+
+        'Catering Del Fees
+        m.Rows(0).Item(5).ToString()
+        m.Rows(1).Item(5).ToString()
+        m.Rows(2).Item(5).ToString()
+        m.Rows(3).Item(5).ToString()
+        m.Rows(4).Item(5).ToString()
+        m.Rows(5).Item(5).ToString()
+        m.Rows(6).Item(5).ToString()
+        m.Rows(7).Item(5).ToString()
+        m.Rows(8).Item(5).ToString()
+        m.Rows(9).Item(5).ToString()
+        m.Rows(10).Item(5).ToString()
+    End Function
+
 
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         returnSet.Tables.Clear()
         modSet.Tables.Clear()
-        Form2.Hide()
+
         Try
             TestExcelImport()
+            TestDataRetrieval()
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
@@ -184,7 +238,7 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+        Button3.Hide()
     End Sub
 
     Private Sub Button2_Click_1(sender As Object, e As EventArgs) Handles Button2.Click
@@ -193,5 +247,13 @@ Public Class Form1
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
+    End Sub
+
+    Private Sub TextBox3_TextChanged(sender As Object, e As EventArgs) Handles TextBox3.TextChanged
+
+    End Sub
+
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        PriceScripts()
     End Sub
 End Class

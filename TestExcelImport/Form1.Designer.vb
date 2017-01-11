@@ -26,13 +26,15 @@ Partial Class Form1
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
         Me.TextBox2 = New System.Windows.Forms.TextBox()
         Me.Button2 = New System.Windows.Forms.Button()
+        Me.TextBox3 = New System.Windows.Forms.TextBox()
+        Me.Button3 = New System.Windows.Forms.Button()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Button1
         '
         Me.Button1.Anchor = System.Windows.Forms.AnchorStyles.Top
-        Me.Button1.Location = New System.Drawing.Point(45, 11)
+        Me.Button1.Location = New System.Drawing.Point(80, -2)
         Me.Button1.Margin = New System.Windows.Forms.Padding(2)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(110, 36)
@@ -51,7 +53,7 @@ Partial Class Form1
         Me.DataGridView1.Name = "DataGridView1"
         Me.DataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToFirstHeader
         Me.DataGridView1.RowTemplate.Height = 24
-        Me.DataGridView1.Size = New System.Drawing.Size(215, 151)
+        Me.DataGridView1.Size = New System.Drawing.Size(563, 443)
         Me.DataGridView1.TabIndex = 3
         '
         'TextBox2
@@ -70,11 +72,30 @@ Partial Class Form1
         Me.Button2.Text = "Button2"
         Me.Button2.UseVisualStyleBackColor = True
         '
+        'TextBox3
+        '
+        Me.TextBox3.Location = New System.Drawing.Point(248, 13)
+        Me.TextBox3.Multiline = True
+        Me.TextBox3.Name = "TextBox3"
+        Me.TextBox3.Size = New System.Drawing.Size(290, 20)
+        Me.TextBox3.TabIndex = 6
+        '
+        'Button3
+        '
+        Me.Button3.Location = New System.Drawing.Point(151, 37)
+        Me.Button3.Name = "Button3"
+        Me.Button3.Size = New System.Drawing.Size(75, 23)
+        Me.Button3.TabIndex = 7
+        Me.Button3.Text = "Price Script"
+        Me.Button3.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(214, 217)
+        Me.ClientSize = New System.Drawing.Size(562, 509)
+        Me.Controls.Add(Me.Button3)
+        Me.Controls.Add(Me.TextBox3)
         Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.TextBox2)
         Me.Controls.Add(Me.DataGridView1)
@@ -91,4 +112,6 @@ Partial Class Form1
     Friend WithEvents DataGridView1 As DataGridView
     Friend WithEvents TextBox2 As TextBox
     Friend WithEvents Button2 As Button
+    Friend WithEvents TextBox3 As TextBox
+    Friend WithEvents Button3 As Button
 End Class
