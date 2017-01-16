@@ -147,8 +147,8 @@ Public Class Form1
 
         DataGridView1.DataSource = modSet.Tables(0).DefaultView
 
-        DataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
-        DataGridView1.AutoResizeColumns()
+        'DataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
+        'DataGridView1.AutoResizeColumns()
 
         '    modSet.Tables(0).GetChanges()
         '    modSet.Tables(0).AcceptChanges()
@@ -193,7 +193,7 @@ Public Class Form1
         Button3.Hide()
     End Sub
 
-    Private Sub Button2_Click_1(sender As Object, e As EventArgs) Handles Button2.Click
+    Private Sub Button2_Click_1(sender As Object, e As EventArgs)
         Try
             TestDataRetrieval()
         Catch ex As Exception
@@ -201,7 +201,7 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub TextBox3_TextChanged(sender As Object, e As EventArgs) Handles TextBox3.TextChanged
+    Private Sub TextBox3_TextChanged(sender As Object, e As EventArgs)
 
     End Sub
 
@@ -217,6 +217,7 @@ Public Class Form1
         modSet.GetChanges()
         modSet.AcceptChanges()
         Dim u As String = "update tblMenuItems set Price1= '{0}' "
+        Dim d As String = "update tblMenuItemExtend set DelCharge='{0}'"
         Dim regPrice(52) As String
         Dim catPrice(52) As String
         Dim regFee(52) As String
@@ -261,10 +262,7 @@ Public Class Form1
             regPrice(6) = ""
         End If
         'X Bacon... do I need a separate If Statment here?
-        'It'd be m.row(7).item(1) if so, For now I am ignoring it.
-        'Also Confusion about the necessity for two slots for avo and cheese, for now
-        '   I am just ripping the value off of the cheese entry, will split them later and get
-        '       The itemnums from tblmenuitems in sql
+        'It'd be m.row(7).item(1) if so, For now I am ignoring it
         If m.Rows(8).Item(1).ToString() IsNot "" Then
             regPrice(8) = String.Format("--Cheese--" & vbNewLine & u & "where itemnum in (118,212,219,211)" & vbNewLine, m.Rows(8).Item(1).ToString())
         Else
@@ -275,7 +273,6 @@ Public Class Form1
         Else
             regPrice(9) = ""
         End If
-        'Future Avocado entry here, m.row(9).item(1)
         If m.Rows(10).Item(1).ToString() IsNot "" Then
             regPrice(10) = String.Format("--Pickles--" & vbNewLine & u & "where itemnum in (162,182,183)" & vbNewLine, m.Rows(10).Item(1).ToString())
         Else
@@ -379,83 +376,83 @@ Public Class Form1
         'Regular Fees
         '
         '
-        If m.Rows(0).Item(1).ToString() IsNot "" Then
-            regFee(0) = String.Format("--Slims--" & vbNewLine & u & "where itemnum in (124,141,142,143,144,145,146)" & vbNewLine, m.Rows(0).Item(1).ToString())
+        If m.Rows(0).Item(2).ToString() IsNot "" Then
+            regFee(0) = String.Format("--Slims--" & vbNewLine & d & "where itemnum in (124,141,142,143,144,145,146) AND TransTypeID IN (3,9)" & vbNewLine, m.Rows(0).Item(2).ToString())
         Else
             regFee(0) = ""
         End If
-        If m.Rows(1).Item(1).ToString() IsNot "" Then
-            regFee(1) = String.Format("--Subs--" & vbNewLine & u & "where itemnum in (110,111,112,113,114,115,116)" & vbNewLine, m.Rows(1).Item(1).ToString())
+        If m.Rows(1).Item(2).ToString() IsNot "" Then
+            regFee(1) = String.Format("--Subs--" & vbNewLine & d & "where itemnum in (110,111,112,113,114,115,116) AND TransTypeID IN (3,9)" & vbNewLine, m.Rows(1).Item(2).ToString())
         Else
             regFee(1) = ""
         End If
-        If m.Rows(2).Item(1).ToString() IsNot "" Then
-            regFee(2) = String.Format("--Clubs--" & vbNewLine & u & "where itemnum in (125,126,127,128,129,130,131,132,133,134,650)" & vbNewLine, m.Rows(2).Item(1).ToString())
+        If m.Rows(2).Item(2).ToString() IsNot "" Then
+            regFee(2) = String.Format("--Clubs--" & vbNewLine & d & "where itemnum in (125,126,127,128,129,130,131,132,133,134,650) AND TransTypeID IN (3,9)" & vbNewLine, m.Rows(2).Item(2).ToString())
         Else
             regFee(2) = ""
         End If
-        If m.Rows(3).Item(1).ToString() IsNot "" Then
-            regFee(3) = String.Format("--Garg--" & vbNewLine & u & "where itemnum in (117)" & vbNewLine, m.Rows(3).Item(1).ToString())
+        If m.Rows(3).Item(2).ToString() IsNot "" Then
+            regFee(3) = String.Format("--Garg--" & vbNewLine & d & "where itemnum in (117) AND TransTypeID IN (3,9)" & vbNewLine, m.Rows(3).Item(2).ToString())
         Else
             regFee(3) = ""
         End If
-        If m.Rows(4).Item(1).ToString() IsNot "" Then
-            regFee(4) = String.Format("--Fresh Bread--" & vbNewLine & u & "where itemnum in (244)" & vbNewLine, m.Rows(4).Item(1).ToString())
+        If m.Rows(4).Item(2).ToString() IsNot "" Then
+            regFee(4) = String.Format("--Fresh Bread--" & vbNewLine & d & "where itemnum in (244) AND TransTypeID IN (3,9)" & vbNewLine, m.Rows(4).Item(2).ToString())
         Else
             regFee(4) = ""
         End If
-        If m.Rows(5).Item(1).ToString() IsNot "" Then
-            regFee(5) = String.Format("--Day Old Bread--" & vbNewLine & u & "where itemnum in (209)" & vbNewLine, m.Rows(5).Item(1).ToString())
+        If m.Rows(5).Item(2).ToString() IsNot "" Then
+            regFee(5) = String.Format("--Day Old Bread--" & vbNewLine & d & "where itemnum in (209) AND TransTypeID IN (3,9)" & vbNewLine, m.Rows(5).Item(2).ToString())
         Else
             regFee(5) = ""
         End If
-        If m.Rows(6).Item(1).ToString() IsNot "" Then
-            regFee(6) = String.Format("--Meats--" & vbNewLine & u & "where itemnum in (247,450,451,452,453,454,455,456,119,120,121,122,123,139,147,179,180,212,213,245)" & vbNewLine, m.Rows(6).Item(1).ToString())
+        If m.Rows(6).Item(2).ToString() IsNot "" Then
+            regFee(6) = String.Format("--Meats--" & vbNewLine & d & "where itemnum in (247,450,451,452,453,454,455,456,119,120,121,122,123,139,147,179,180,212,213,245) AND TransTypeID IN (3,9)" & vbNewLine, m.Rows(6).Item(2).ToString())
         Else
             regFee(6) = ""
         End If
-        If m.Rows(8).Item(1).ToString() IsNot "" Then
-            regFee(8) = String.Format("--Cheese--" & vbNewLine & u & "where itemnum in (118,212,219,211)" & vbNewLine, m.Rows(8).Item(1).ToString())
+        If m.Rows(8).Item(2).ToString() IsNot "" Then
+            regFee(8) = String.Format("--Cheese--" & vbNewLine & d & "where itemnum in (118,212,219,211) AND TransTypeID IN (3,9)" & vbNewLine, m.Rows(8).Item(2).ToString())
         Else
             regFee(8) = ""
         End If
-        If m.Rows(9).Item(1).ToString() IsNot "" Then
-            regFee(9) = String.Format("--Avocado--" & vbNewLine & u & "where itemnum in (102,201,213,220)" & vbNewLine, m.Rows(9).Item(1).ToString())
+        If m.Rows(9).Item(2).ToString() IsNot "" Then
+            regFee(9) = String.Format("--Avocado--" & vbNewLine & d & "where itemnum in (102,201,213,220) AND TransTypeID IN (3,9)" & vbNewLine, m.Rows(9).Item(2).ToString())
         Else
             regFee(9) = ""
         End If
-        If m.Rows(10).Item(1).ToString() IsNot "" Then
-            regFee(10) = String.Format("--Pickles--" & vbNewLine & u & "where itemnum in (162,182,183)" & vbNewLine, m.Rows(10).Item(1).ToString())
+        If m.Rows(10).Item(2).ToString() IsNot "" Then
+            regFee(10) = String.Format("--Pickles--" & vbNewLine & d & "where itemnum in (162,182,183) AND TransTypeID IN (3,9)" & vbNewLine, m.Rows(10).Item(2).ToString())
         Else
             regFee(10) = ""
         End If
-        If m.Rows(11).Item(1).ToString() IsNot "" Then
-            regFee(11) = String.Format("--Chips--" & vbNewLine & u & "where itemnum in (221,222,223,224,255,256,257,259,258,598,675,597)" & vbNewLine, m.Rows(11).Item(1).ToString())
+        If m.Rows(11).Item(2).ToString() IsNot "" Then
+            regFee(11) = String.Format("--Chips--" & vbNewLine & d & "where itemnum in (221,222,223,224,255,256,257,259,258,598,675,597) AND TransTypeID IN (3,9)" & vbNewLine, m.Rows(11).Item(2).ToString())
         Else
             regFee(11) = ""
         End If
-        If m.Rows(12).Item(1).ToString() IsNot "" Then
-            regFee(12) = String.Format("--Medium Sodas--" & vbNewLine & u & "where [group]='6' and ItemDesc like '%med%'" & vbNewLine, m.Rows(12).Item(1).ToString())
+        If m.Rows(12).Item(2).ToString() IsNot "" Then
+            regFee(12) = String.Format("--Medium Sodas--" & vbNewLine & d & "where itemnum in(190,191,192,193,194,196,197,237,238,239,240,241,242,243,340,341,362) AND TransTypeID IN (3,9)" & vbNewLine, m.Rows(12).Item(2).ToString())
         Else
             regFee(12) = ""
         End If
-        If m.Rows(13).Item(1).ToString() IsNot "" Then
-            regFee(13) = String.Format("--Large Sodas--" & vbNewLine & u & "where [group]='6' and ItemDesc like '%lg%'" & vbNewLine, m.Rows(13).Item(1).ToString())
+        If m.Rows(13).Item(2).ToString() IsNot "" Then
+            regFee(13) = String.Format("--Large Sodas--" & vbNewLine & d & "where itemnum in(198,202,203,204,205,206,207,208,342,358,359,380,381,382,383,384,385,388) AND TransTypeID IN (3,9)" & vbNewLine, m.Rows(13).Item(2).ToString())
         Else
             regFee(13) = ""
         End If
-        If m.Rows(14).Item(1).ToString() IsNot "" Then
-            regFee(14) = String.Format("--Canned Sodas--" & vbNewLine & u & "where [group]='6' and ItemDesc like '%can%'" & vbNewLine, m.Rows(14).Item(1).ToString())
+        If m.Rows(14).Item(2).ToString() IsNot "" Then
+            regFee(14) = String.Format("--Canned Sodas--" & vbNewLine & d & "where itemnum in (344,345,346,360,361,364,365,366,862,444,921,922,923,924,925,926,927,928,929,930,931) and TransTypeID IN (3,9)" & vbNewLine, m.Rows(14).Item(2).ToString())
         Else
             regFee(14) = ""
         End If
-        If m.Rows(15).Item(1).ToString() IsNot "" Then
-            regFee(15) = String.Format("--Bottled Water--" & vbNewLine & u & "where itemnum in (155)" & vbNewLine, m.Rows(15).Item(1).ToString())
+        If m.Rows(15).Item(2).ToString() IsNot "" Then
+            regFee(15) = String.Format("--Bottled Water--" & vbNewLine & d & "where itemnum in (155) and TransTypeID IN (3,9)" & vbNewLine, m.Rows(15).Item(2).ToString())
         Else
             regFee(15) = ""
         End If
-        If m.Rows(16).Item(1).ToString() IsNot "" Then
-            regFee(16) = String.Format("--Cookies--" & vbNewLine & u & "where itemnum in (215,216,676)" & vbNewLine, m.Rows(16).Item(1).ToString())
+        If m.Rows(16).Item(2).ToString() IsNot "" Then
+            regFee(16) = String.Format("--Cookies--" & vbNewLine & d & "where itemnum in (215,216,676) and TransTypeID IN (3,9)" & vbNewLine, m.Rows(16).Item(2).ToString())
         Else
             regFee(16) = ""
         End If
@@ -526,7 +523,8 @@ Public Class Form1
         Me.regPrice = "use PDQPOS" & vbNewLine & "go" & vbNewLine & vbNewLine &
         "-------------------------------------------------------------------------------------------------------------" & vbNewLine &
         "-------------------------------------------Regular Prices----------------------------------------------------" & vbNewLine &
-        "-------------------------------------------------------------------------------------------------------------" & vbNewLine & regFee(0) & regFee(1) & regFee(2) & regFee(3) & regFee(4) & regFee(5) & regFee(6) & regFee(7) &
+        "-------------------------------------------------------------------------------------------------------------" & vbNewLine &
+        regPrice(0) & regPrice(1) & regPrice(2) & regPrice(3) & regPrice(4) & regPrice(5) & regPrice(6) & regPrice(7) &
         regPrice(8) & regPrice(9) & regPrice(10) & regPrice(11) & regPrice(12) & regPrice(13) & regPrice(14) & regPrice(15) & regPrice(16) &
         regPrice(17) & vbNewLine &
         "-------------------------------------------------------------------------------------------------------------" & vbNewLine &
@@ -539,7 +537,8 @@ Public Class Form1
         "--------------------------------------------Delivery Fees----------------------------------------------------" & vbNewLine &
         "-------------------------------------------------------------------------------------------------------------" & vbNewLine &
         regFee(0) & regFee(1) & regFee(2) & regFee(3) & regFee(4) & regFee(5) & regFee(6) &
-        regFee(7) & regFee(8) & regFee(9) & regFee(10)
+        regFee(7) & regFee(8) & regFee(9) & regFee(10) & regFee(11) & regFee(12) & regFee(13) & regFee(14) &
+        regFee(15) & regFee(16)
         '"--------------------------------------------Catering Fees----------------------------------------------------" & vbNewLine &
         '"-------------------------------------------------------------------------------------------------------------" & vbNewLine &
         'catPrice(0) & catPrice(1) & catPrice(2) & catPrice(3) & catPrice(4) & catPrice(5) & catPrice(6) &
