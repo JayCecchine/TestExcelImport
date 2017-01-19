@@ -3,6 +3,7 @@ Imports System.Data
 Imports System.Runtime.InteropServices
 Imports System.Threading
 
+
 Public Class Form1
     Dim returnSet As New DataSet
     Dim modSet As New DataSet
@@ -14,6 +15,7 @@ Public Class Form1
     End Function
     Public Sub NoteStart(getString As String)
         'copy to clipboard
+
         Dim strCopyMe As String = getString
         Clipboard.SetDataObject(strCopyMe)
 
@@ -22,8 +24,7 @@ Public Class Form1
         Dim p As New Process()
         p.StartInfo.FileName = "notepad.exe"
         p.Start()
-        Thread.Sleep(100)
-        SetWindowText(p.MainWindowHandle, "Test")
+        'SetWindowText(p.MainWindowHandle, "Test")
         p.WaitForInputIdle()
 
         ' paste the data from the clipboard
@@ -223,6 +224,10 @@ Public Class Form1
         Dim regFee(52) As String
         Dim catFee(52) As String
         Dim m = modSet.Tables(0)
+        Dim regpHead, catpHead, regfHead, catfHead As String
+        Dim test As Integer
+        Dim count As Integer
+
 
 
         'Regular Prices
@@ -457,6 +462,9 @@ Public Class Form1
             regFee(16) = ""
         End If
 
+        'Catering Prices to Store or Driver
+        'If m.Rows(0).Item() Then
+
         'Regular Prices
         m.Rows(1).Item(1).ToString()
         m.Rows(2).Item(1).ToString()
@@ -520,22 +528,65 @@ Public Class Form1
         m.Rows(9).Item(5).ToString()
         m.Rows(10).Item(5).ToString()
 
-        Me.regPrice = "use PDQPOS" & vbNewLine & "go" & vbNewLine & vbNewLine &
-        "-------------------------------------------------------------------------------------------------------------" & vbNewLine &
-        "-------------------------------------------Regular Prices----------------------------------------------------" & vbNewLine &
-        "-------------------------------------------------------------------------------------------------------------" & vbNewLine &
+        'Determining if there are values in the array, if there are no values, it will not generate a heading
+        For i As Integer = 0 To regPrice.GetUpperBound(0)
+            If regPrice(i) = "" Then
+                count = count + 1
+            Else
+                count = count + 0
+            End If
+        Next
+        If count = 53 Then
+            regpHead = ""
+        Else
+            regpHead = "" & vbNewLine &
+                "-------------------------------------------------------------------------------------------------------------" & vbNewLine &
+                "-------------------------------------------Regular Prices----------------------------------------------------" & vbNewLine &
+                "-------------------------------------------------------------------------------------------------------------" & vbNewLine
+        End If
+        count = 0
+        For i As Integer = 0 To catPrice.GetUpperBound(0)
+            If catPrice(i) = "" Then
+                count = count + 1
+            Else
+                count = count + 0
+            End If
+
+        Next
+        If count = 53 Then
+            catpHead = ""
+        Else
+            catpHead = "" & vbNewLine &
+                "-------------------------------------------------------------------------------------------------------------" & vbNewLine &
+                "-------------------------------------------Catering Prices---------------------------------------------------" & vbNewLine &
+                "-------------------------------------------------------------------------------------------------------------" & vbNewLine
+        End If
+        count = 0
+        For i As Integer = 0 To regFee.GetUpperBound(0)
+            If regFee(i) = "" Then
+                count = count + 1
+            Else
+                count = count + 0
+            End If
+        Next
+        If count = 53 Then
+            regfHead = ""
+        Else
+            regfHead = "" & vbNewLine &
+                "-------------------------------------------------------------------------------------------------------------" & vbNewLine &
+                "--------------------------------------------Delivery Fees----------------------------------------------------" & vbNewLine &
+                "-------------------------------------------------------------------------------------------------------------" & vbNewLine
+        End If
+
+        Me.regPrice = "use PDQPOS" & vbNewLine & "go" & vbNewLine &
+        regpHead &
         regPrice(0) & regPrice(1) & regPrice(2) & regPrice(3) & regPrice(4) & regPrice(5) & regPrice(6) & regPrice(7) &
         regPrice(8) & regPrice(9) & regPrice(10) & regPrice(11) & regPrice(12) & regPrice(13) & regPrice(14) & regPrice(15) & regPrice(16) &
         regPrice(17) & vbNewLine &
-        "-------------------------------------------------------------------------------------------------------------" & vbNewLine &
-        "-------------------------------------------Catering Prices---------------------------------------------------" & vbNewLine &
-        "-------------------------------------------------------------------------------------------------------------" & vbNewLine &
+        catpHead &
         catPrice(0) & catPrice(1) & catPrice(2) & catPrice(3) & catPrice(4) & catPrice(5) & catPrice(6) &
         catPrice(7) & catPrice(8) & catPrice(9) & catPrice(10) & vbNewLine &
-        vbNewLine &
-        "-------------------------------------------------------------------------------------------------------------" & vbNewLine &
-        "--------------------------------------------Delivery Fees----------------------------------------------------" & vbNewLine &
-        "-------------------------------------------------------------------------------------------------------------" & vbNewLine &
+        regfHead &
         regFee(0) & regFee(1) & regFee(2) & regFee(3) & regFee(4) & regFee(5) & regFee(6) &
         regFee(7) & regFee(8) & regFee(9) & regFee(10) & regFee(11) & regFee(12) & regFee(13) & regFee(14) &
         regFee(15) & regFee(16)
@@ -545,5 +596,12 @@ Public Class Form1
         'catPrice(7) & catPrice(8) & catPrice(9) & catPrice(10)
         NoteStart(Me.regPrice)
 
+
+
+
     End Function
+
+    Private Sub Button2_Click_2(sender As Object, e As EventArgs) Handles Button2.Click
+        NoteStart("This is a test")
+    End Sub
 End Class
