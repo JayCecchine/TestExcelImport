@@ -215,7 +215,7 @@ Public Class Form1
         End Try
     End Sub
 
-    Function PriceScripts()
+    Sub PriceScripts()
         modSet.GetChanges()
         modSet.AcceptChanges()
         Dim u As String = "update tblMenuItems set Price1= '{0}' "
@@ -469,26 +469,25 @@ Public Class Form1
         'Catering Fees to Store or Driver
         Select Case m.Rows(14).Item(4).ToString
             Case ""
-                catStore(0) = "Nothing here"
                 catering = ""
             Case = "Driver"
                 If m.Rows(0).Item(5).ToString IsNot "" Then
-                    catDriver(0) = String.Format("--Platters & Minis--" & vbNewLine & "update tblmenugroups set catering charge = '{0}', CateringGroup = 'True'" & vbNewLine & "where groupid = 24" & vbNewLine, m.Rows(0).Item(5).ToString())
+                    catDriver(0) = String.Format("--Platters & Minis--" & vbNewLine & "update tblmenugroups set catering charge = '{0}' CateringGroup = 'True'" & vbNewLine & "where groupid = 24" & vbNewLine, m.Rows(0).Item(5).ToString())
                 Else
                     catDriver(0) = ""
                 End If
                 If m.Rows(3).Item(5).ToString IsNot "" Then
-                    catDriver(1) = String.Format("--Box Lunches--" & vbNewLine & "update tblmenugroups set catering charge = '{0}', CateringGroup = 'True'" & vbNewLine & "where groupid = 12" & vbNewLine, m.Rows(3).Item(5).ToString())
+                    catDriver(1) = String.Format("--Box Lunches--" & vbNewLine & "update tblmenugroups set catering charge = '{0}' CateringGroup = 'True'" & vbNewLine & "where groupid = 12" & vbNewLine, m.Rows(3).Item(5).ToString())
                 Else
                     catDriver(1) = ""
                 End If
                 If m.Rows(8).Item(5).ToString IsNot "" Then
-                    catDriver(2) = String.Format("--Cookie Boxes--" & vbNewLine & "update tblmenugroups set catering charge = '{0}', CateringGroup = 'True'" & vbNewLine & "where groupid = 21" & vbNewLine, m.Rows(8).Item(5).ToString())
+                    catDriver(2) = String.Format("--Cookie Boxes--" & vbNewLine & "update tblmenugroups set catering charge = '{0}' CateringGroup = 'True'" & vbNewLine & "where groupid = 21" & vbNewLine, m.Rows(8).Item(5).ToString())
                 Else
                     catDriver(2) = ""
                 End If
                 If m.Rows(7).Item(5).ToString IsNot "" Then
-                    catDriver(3) = String.Format("--Pickle Bucket--" & vbNewLine & "update tblmenugroups set catering charge = '{0}', CateringGroup = 'True'" & vbNewLine & "where groupid = 11" & vbNewLine, m.Rows(7).Item(5).ToString())
+                    catDriver(3) = String.Format("--Pickle Bucket--" & vbNewLine & "update tblmenugroups set catering charge = '{0}' CateringGroup = 'True'" & vbNewLine & "where groupid = 11" & vbNewLine, m.Rows(7).Item(5).ToString())
                 Else
                     catDriver(3) = ""
                 End If
@@ -496,18 +495,61 @@ Public Class Form1
             Case = "Store"
                 Dim c As String = "update tblMenuItemExtend SET DelCharge = "
                 If m.Rows(0).Item(5).ToString IsNot "" Then
-                    catStore(0) = String.Format("--15 piece platter--" & vbNewLine & "{0}'{1}', WHERE ItemNum IN (300) and TransTypeID IN (3,9)", c, m.Rows(0).Item(5).ToString, "")
-                    catering = catStore(0)
+                    catStore(0) = String.Format("--15 Piece Platter--" & vbNewLine & "{0}'{1}' WHERE ItemNum IN (300) and TransTypeID IN (3,9)" & vbNewLine, c, m.Rows(0).Item(5).ToString)
                 Else
                     catStore(0) = ""
                 End If
                 If m.Rows(1).Item(5).ToString IsNot "" Then
-                    catStore(1) = String.Format("--30 piece platter--" & vbNewLine & "{0}'{1}', WHERE ItemNum IN (301) and TransTypeID IN (3,9)", c, m.Rows(1).Item(5).ToString, "")
-                    catering = catStore(0)
+                    catStore(1) = String.Format("--30 Piece Platter--" & vbNewLine & "{0}'{1}' WHERE ItemNum IN (301) and TransTypeID IN (3,9)" & vbNewLine, c, m.Rows(1).Item(5).ToString)
                 Else
                     catStore(1) = ""
                 End If
-
+                If m.Rows(2).Item(5).ToString IsNot "" Then
+                    catStore(2) = String.Format("--Club Upcharge--" & vbNewLine & "{0}'{1}' WHERE ItemNum IN (467,468,469,470,471,472,473,474,475,476,652) and TransTypeID IN (3,9)" & vbNewLine, c, m.Rows(2).Item(5).ToString)
+                Else
+                    catStore(2) = ""
+                End If
+                If m.Rows(3).Item(5).ToString IsNot "" Then
+                    catStore(3) = String.Format("--Slim Box--" & vbNewLine & "{0}'{1}' WHERE ItemNum IN (290,291,292,293,294,295,296,297) and TransTypeID IN (3,9)" & vbNewLine, c, m.Rows(3).Item(5).ToString)
+                Else
+                    catStore(3) = ""
+                End If
+                If m.Rows(4).Item(5).ToString IsNot "" Then
+                    catStore(4) = String.Format("--Sub Box--" & vbNewLine & "{0}'{1}' WHERE ItemNum IN (306,307,308,309,310,311,312) and TransTypeID IN (3,9)" & vbNewLine, c, m.Rows(4).Item(5).ToString)
+                Else
+                    catStore(4) = ""
+                End If
+                If m.Rows(5).Item(5).ToString IsNot "" Then
+                    catStore(5) = String.Format("--Club Box--" & vbNewLine & "{0}'{1}' WHERE ItemNum IN (313,314,315,316,317,318,319,320,321,322,651) and TransTypeID IN (3,9)" & vbNewLine, c, m.Rows(5).Item(5).ToString)
+                Else
+                    catStore(5) = ""
+                End If
+                If m.Rows(6).Item(5).ToString IsNot "" Then
+                    catStore(6) = String.Format("--Garg Box--" & vbNewLine & "{0}'{1}' WHERE ItemNum IN (323) and TransTypeID IN (3,9)" & vbNewLine, c, m.Rows(6).Item(5).ToString)
+                Else
+                    catStore(6) = ""
+                End If
+                If m.Rows(7).Item(5).ToString IsNot "" Then
+                    catStore(7) = String.Format("--Pickle Bucket--" & vbNewLine & "{0}'{1}' WHERE ItemNum IN (100,109,154,184) and TransTypeID IN (3,9)" & vbNewLine, c, m.Rows(7).Item(5).ToString)
+                Else
+                    catStore(7) = ""
+                End If
+                If m.Rows(8).Item(5).ToString IsNot "" Then
+                    catStore(8) = String.Format("--Cookie Box--" & vbNewLine & "{0}'{1}' WHERE ItemNum IN (869,863,867) and TransTypeID IN (3,9)" & vbNewLine, c, m.Rows(8).Item(5).ToString)
+                Else
+                    catStore(8) = ""
+                End If
+                If m.Rows(9).Item(5).ToString IsNot "" Then
+                    catStore(9) = String.Format("--12 Pack Mini Jimmy--" & vbNewLine & "{0}'{1}' WHERE ItemNum IN (850) and TransTypeID IN (3,9)" & vbNewLine, c, m.Rows(9).Item(5).ToString)
+                Else
+                    catStore(9) = ""
+                End If
+                If m.Rows(10).Item(5).ToString IsNot "" Then
+                    catStore(10) = String.Format("--24 Pack Mini Jimmy--" & vbNewLine & "{0}'{1}' WHERE ItemNum IN (864) and TransTypeID IN (3,9)" & vbNewLine, c, m.Rows(10).Item(5).ToString)
+                Else
+                    catStore(10) = ""
+                End If
+                catering = catStore(0) & catStore(1) & catStore(2) & catStore(3) & catStore(4) & catStore(5) & catStore(6) & catStore(7) & catStore(8) & catStore(9) & catStore(10)
 
 
 
@@ -654,13 +696,24 @@ Public Class Form1
         regFee(15) & regFee(16) & vbNewLine &
         catfHead & catering
         NoteStart(Me.regPrice)
+    End Sub
+    Public Sub FlatDeliveryFee()
+        Dim flatFee As String
+        Dim m = modSet.Tables(0)
+        Dim v = vbNewLine
+        flatFee = "Hey this is working"
+        'flatFee = String.Format("use pdqpos" & v & "go" & v & "--Resets all Del charges to 0--" &
+        '          v & "UPDATE tblMenuItemExtend SET DelCharge='0.00'" & v & "--UPDATE TAX ON DELIVERY FEE--" &
+        '          v & "UPDATE tblMenuItemExtend SET TaxDelCharge='False'" & v & "WHERE TransTypeID IN (3,9)" & v & "--Set Flat Fee below--" & v &
+        '          "UPDATE tblMenuItemExtend SET DelCharge= '{0}'" & v & "WHERE ItemNum IN (124,141,142,143,144,145,146,140,110,111,112,113,114,115,116,125,126,127,128,129,130,131,132,133,134,650,117,244,209,247,450,451,452,453,454,455,456,119,120,121,122,123,139,147,179,180,212,213,245,201,211,102,212,213,118,219,102,220,162,182,183,221,222,223,224,255,256,257,259,258,598,675,597,190,191,192,193,194,196,197,237,238,239,240,241,242,243,340,341,362,198,202,203,204,205,206,207,208,342,358,359,380,381,382,383,384,385,388,344,345,346,360,361,364,365,366,862,444,155,215,216,676,921,922,923,924,925,926,927,928,929,930,931)
+        '            AND TransTypeID IN (3,9)")
+        NoteStart(flatFee)
+    End Sub
 
 
-
-
-    End Function
 
     Private Sub Button2_Click_2(sender As Object, e As EventArgs) Handles Button2.Click
-        NoteStart("This is a test")
+        Form2.Show()
+
     End Sub
 End Class
