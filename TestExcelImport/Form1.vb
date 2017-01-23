@@ -32,7 +32,7 @@ Public Class Form1
     End Sub
     Shared Function SetWindowText(ByVal hwnd As IntPtr, ByVal windowName As String) As Boolean
     End Function
-    Function TestExcelImport()
+    Sub ExcelConverter()
 
         Dim openFile = New OpenFileDialog
         openFile.Title = "Select an Excel File"
@@ -40,7 +40,7 @@ Public Class Form1
 
         'If use does not hit ok when selecting file, function does nothing
         If openFile.ShowDialog() <> DialogResult.OK Then
-            Return Nothing
+            Exit Sub
         End If
 
         'Selecting the excel application, using the workbooks, selecting an excel file
@@ -85,9 +85,9 @@ Public Class Form1
         xlBooks.Close()
         xl.Quit()
 
-    End Function
+    End Sub
 
-    Function TestDataRetrieval()
+    Sub APTable()
 
         Button3.Show()
         Dim s = returnSet.Tables(0)
@@ -115,10 +115,11 @@ Public Class Form1
         'Filling the necessary data from the returnSet
         '   
         'Item Name / Subtotal / Del Fee  Catering Item / Subtotal / Del Fee
-        modTable.Rows.Add(r.Rows(1).Item(0), r.Rows(1).Item(1), r.Rows(1).Item(2), r.Rows(19).Item(0), r.Rows(19).Item(1), r.Rows(19).Item(2))
+        'Catering groups added next to certain items for the purpose of the driver catering fees scripts
+        modTable.Rows.Add(r.Rows(1).Item(0), r.Rows(1).Item(1), r.Rows(1).Item(2), String.Format("{0} (Platters)", r.Rows(19).Item(0)), r.Rows(19).Item(1), r.Rows(19).Item(2))
         modTable.Rows.Add(r.Rows(2).Item(0), r.Rows(2).Item(1), r.Rows(2).Item(2), r.Rows(20).Item(0), r.Rows(20).Item(1), r.Rows(20).Item(2))
         modTable.Rows.Add(r.Rows(3).Item(0), r.Rows(3).Item(1), r.Rows(3).Item(2), r.Rows(21).Item(0), r.Rows(21).Item(1), r.Rows(21).Item(2))
-        modTable.Rows.Add(r.Rows(4).Item(0), r.Rows(4).Item(1), r.Rows(4).Item(2), r.Rows(22).Item(0), r.Rows(22).Item(1), r.Rows(22).Item(2))
+        modTable.Rows.Add(r.Rows(4).Item(0), r.Rows(4).Item(1), r.Rows(4).Item(2), String.Format("{0} (Boxes)", r.Rows(22).Item(0)), r.Rows(22).Item(1), r.Rows(22).Item(2))
         modTable.Rows.Add(r.Rows(5).Item(0), r.Rows(5).Item(1), r.Rows(5).Item(2), r.Rows(23).Item(0), r.Rows(23).Item(1), r.Rows(23).Item(2))
         modTable.Rows.Add(r.Rows(6).Item(0), r.Rows(6).Item(1), r.Rows(6).Item(2), r.Rows(24).Item(0), r.Rows(24).Item(1), r.Rows(24).Item(2))
         modTable.Rows.Add(r.Rows(7).Item(0), r.Rows(7).Item(1), r.Rows(7).Item(2), r.Rows(25).Item(0), r.Rows(25).Item(1), r.Rows(25).Item(2))
@@ -164,7 +165,7 @@ Public Class Form1
         'compile variables into a data table that is user friendly
         '   ask user if data is correct, if not, allow for user to override pre-existing values
         '       Take new acquired data from data table, generate necessary scripts for end user
-    End Function
+    End Sub
 
 
 
@@ -174,8 +175,8 @@ Public Class Form1
         modSet.Tables.Clear()
 
         Try
-            TestExcelImport()
-            TestDataRetrieval()
+            ExcelConverter()
+            APTable()
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
@@ -196,7 +197,7 @@ Public Class Form1
 
     Private Sub Button2_Click_1(sender As Object, e As EventArgs)
         Try
-            TestDataRetrieval()
+            APTable()
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
@@ -222,11 +223,14 @@ Public Class Form1
         Dim regPrice(52) As String
         Dim catPrice(52) As String
         Dim regFee(52) As String
-        Dim catFee(52) As String
+        Dim catStore(52) As String
+        Dim catDriver(52) As String
+        Dim catering As String
         Dim m = modSet.Tables(0)
         Dim regpHead, catpHead, regfHead, catfHead As String
         Dim test As Integer
         Dim count As Integer
+
 
 
 
@@ -462,71 +466,120 @@ Public Class Form1
             regFee(16) = ""
         End If
 
+        'Catering Fees to Store or Driver
+        Select Case m.Rows(14).Item(4).ToString
+            Case ""
+                catStore(0) = "Nothing here"
+                catering = ""
+            Case = "Driver"
+                If m.Rows(0).Item(5).ToString IsNot "" Then
+                    catDriver(0) = String.Format("--Platters & Minis--" & vbNewLine & "update tblmenugroups set catering charge = '{0}', CateringGroup = 'True'" & vbNewLine & "where groupid = 24" & vbNewLine, m.Rows(0).Item(5).ToString())
+                Else
+                    catDriver(0) = ""
+                End If
+                If m.Rows(3).Item(5).ToString IsNot "" Then
+                    catDriver(1) = String.Format("--Box Lunches--" & vbNewLine & "update tblmenugroups set catering charge = '{0}', CateringGroup = 'True'" & vbNewLine & "where groupid = 12" & vbNewLine, m.Rows(3).Item(5).ToString())
+                Else
+                    catDriver(1) = ""
+                End If
+                If m.Rows(8).Item(5).ToString IsNot "" Then
+                    catDriver(2) = String.Format("--Cookie Boxes--" & vbNewLine & "update tblmenugroups set catering charge = '{0}', CateringGroup = 'True'" & vbNewLine & "where groupid = 21" & vbNewLine, m.Rows(8).Item(5).ToString())
+                Else
+                    catDriver(2) = ""
+                End If
+                If m.Rows(7).Item(5).ToString IsNot "" Then
+                    catDriver(3) = String.Format("--Pickle Bucket--" & vbNewLine & "update tblmenugroups set catering charge = '{0}', CateringGroup = 'True'" & vbNewLine & "where groupid = 11" & vbNewLine, m.Rows(7).Item(5).ToString())
+                Else
+                    catDriver(3) = ""
+                End If
+                catering = catDriver(0) & catDriver(1) & catDriver(2) & catDriver(3)
+            Case = "Store"
+                Dim c As String = "update tblMenuItemExtend SET DelCharge = "
+                If m.Rows(0).Item(5).ToString IsNot "" Then
+                    catStore(0) = String.Format("--15 piece platter--" & vbNewLine & "{0}'{1}', WHERE ItemNum IN (300) and TransTypeID IN (3,9)", c, m.Rows(0).Item(5).ToString, "")
+                    catering = catStore(0)
+                Else
+                    catStore(0) = ""
+                End If
+                If m.Rows(1).Item(5).ToString IsNot "" Then
+                    catStore(1) = String.Format("--30 piece platter--" & vbNewLine & "{0}'{1}', WHERE ItemNum IN (301) and TransTypeID IN (3,9)", c, m.Rows(1).Item(5).ToString, "")
+                    catering = catStore(0)
+                Else
+                    catStore(1) = ""
+                End If
+
+
+
+
+        End Select
+
+        'if m.rows(14).item(4) = yes/no set variable = update tblmenugroups/tblmenuitems
+
         'Catering Prices to Store or Driver
         'If m.Rows(0).Item() Then
 
-        'Regular Prices
-        m.Rows(1).Item(1).ToString()
-        m.Rows(2).Item(1).ToString()
-        m.Rows(3).Item(1).ToString()
-        m.Rows(4).Item(1).ToString()
-        m.Rows(5).Item(1).ToString()
-        m.Rows(6).Item(1).ToString()
-        m.Rows(7).Item(1).ToString()
-        m.Rows(8).Item(1).ToString()
-        m.Rows(9).Item(1).ToString()
-        m.Rows(10).Item(1).ToString()
-        m.Rows(11).Item(1).ToString()
-        m.Rows(12).Item(1).ToString()
-        m.Rows(13).Item(1).ToString()
-        m.Rows(14).Item(1).ToString()
-        m.Rows(15).Item(1).ToString()
-        m.Rows(16).Item(1).ToString()
+        ''Regular Prices
+        'm.Rows(1).Item(1).ToString()
+        'm.Rows(2).Item(1).ToString()
+        'm.Rows(3).Item(1).ToString()
+        'm.Rows(4).Item(1).ToString()
+        'm.Rows(5).Item(1).ToString()
+        'm.Rows(6).Item(1).ToString()
+        'm.Rows(7).Item(1).ToString()
+        'm.Rows(8).Item(1).ToString()
+        'm.Rows(9).Item(1).ToString()
+        'm.Rows(10).Item(1).ToString()
+        'm.Rows(11).Item(1).ToString()
+        'm.Rows(12).Item(1).ToString()
+        'm.Rows(13).Item(1).ToString()
+        'm.Rows(14).Item(1).ToString()
+        'm.Rows(15).Item(1).ToString()
+        'm.Rows(16).Item(1).ToString()
 
-        'Regular Del Fees
-        m.Rows(0).Item(2).ToString()
-        m.Rows(1).Item(2).ToString()
-        m.Rows(2).Item(2).ToString()
-        m.Rows(3).Item(2).ToString()
-        m.Rows(4).Item(2).ToString()
-        m.Rows(5).Item(2).ToString()
-        m.Rows(6).Item(2).ToString()
-        m.Rows(7).Item(2).ToString()
-        m.Rows(8).Item(2).ToString()
-        m.Rows(9).Item(2).ToString()
-        m.Rows(10).Item(2).ToString()
-        m.Rows(11).Item(2).ToString()
-        m.Rows(12).Item(2).ToString()
-        m.Rows(13).Item(2).ToString()
-        m.Rows(14).Item(2).ToString()
-        m.Rows(15).Item(2).ToString()
-        m.Rows(16).Item(2).ToString()
+        ''Regular Del Fees
+        'm.Rows(0).Item(2).ToString()
+        'm.Rows(1).Item(2).ToString()
+        'm.Rows(2).Item(2).ToString()
+        'm.Rows(3).Item(2).ToString()
+        'm.Rows(4).Item(2).ToString()
+        'm.Rows(5).Item(2).ToString()
+        'm.Rows(6).Item(2).ToString()
+        'm.Rows(7).Item(2).ToString()
+        'm.Rows(8).Item(2).ToString()
+        'm.Rows(9).Item(2).ToString()
+        'm.Rows(10).Item(2).ToString()
+        'm.Rows(11).Item(2).ToString()
+        'm.Rows(12).Item(2).ToString()
+        'm.Rows(13).Item(2).ToString()
+        'm.Rows(14).Item(2).ToString()
+        'm.Rows(15).Item(2).ToString()
+        'm.Rows(16).Item(2).ToString()
 
-        'Catering Prices
-        m.Rows(0).Item(4).ToString()
-        m.Rows(1).Item(4).ToString()
-        m.Rows(2).Item(4).ToString()
-        m.Rows(3).Item(4).ToString()
-        m.Rows(4).Item(4).ToString()
-        m.Rows(5).Item(4).ToString()
-        m.Rows(6).Item(4).ToString()
-        m.Rows(7).Item(4).ToString()
-        m.Rows(8).Item(4).ToString()
-        m.Rows(9).Item(4).ToString()
-        m.Rows(10).Item(4).ToString()
+        ''Catering Prices
+        'm.Rows(0).Item(4).ToString()
+        'm.Rows(1).Item(4).ToString()
+        'm.Rows(2).Item(4).ToString()
+        'm.Rows(3).Item(4).ToString()
+        'm.Rows(4).Item(4).ToString()
+        'm.Rows(5).Item(4).ToString()
+        'm.Rows(6).Item(4).ToString()
+        'm.Rows(7).Item(4).ToString()
+        'm.Rows(8).Item(4).ToString()
+        'm.Rows(9).Item(4).ToString()
+        'm.Rows(10).Item(4).ToString()
 
-        'Catering Del Fees
-        m.Rows(0).Item(5).ToString()
-        m.Rows(1).Item(5).ToString()
-        m.Rows(2).Item(5).ToString()
-        m.Rows(3).Item(5).ToString()
-        m.Rows(4).Item(5).ToString()
-        m.Rows(5).Item(5).ToString()
-        m.Rows(6).Item(5).ToString()
-        m.Rows(7).Item(5).ToString()
-        m.Rows(8).Item(5).ToString()
-        m.Rows(9).Item(5).ToString()
-        m.Rows(10).Item(5).ToString()
+        ''Catering Del Fees
+        'm.Rows(0).Item(5).ToString()
+        'm.Rows(1).Item(5).ToString()
+        'm.Rows(2).Item(5).ToString()
+        'm.Rows(3).Item(5).ToString()
+        'm.Rows(4).Item(5).ToString()
+        'm.Rows(5).Item(5).ToString()
+        'm.Rows(6).Item(5).ToString()
+        'm.Rows(7).Item(5).ToString()
+        'm.Rows(8).Item(5).ToString()
+        'm.Rows(9).Item(5).ToString()
+        'm.Rows(10).Item(5).ToString()
 
         'Determining if there are values in the array, if there are no values, it will not generate a heading
         For i As Integer = 0 To regPrice.GetUpperBound(0)
@@ -578,6 +631,15 @@ Public Class Form1
                 "-------------------------------------------------------------------------------------------------------------" & vbNewLine
         End If
 
+        If catering = "" Then
+            catfHead = ""
+        Else
+            catfHead = "" & vbNewLine &
+                "-------------------------------------------------------------------------------------------------------------" & vbNewLine &
+                "--------------------------------------------Catering Fees----------------------------------------------------" & vbNewLine &
+                "-------------------------------------------------------------------------------------------------------------" & vbNewLine
+        End If
+
         Me.regPrice = "use PDQPOS" & vbNewLine & "go" & vbNewLine &
         regpHead &
         regPrice(0) & regPrice(1) & regPrice(2) & regPrice(3) & regPrice(4) & regPrice(5) & regPrice(6) & regPrice(7) &
@@ -589,11 +651,8 @@ Public Class Form1
         regfHead &
         regFee(0) & regFee(1) & regFee(2) & regFee(3) & regFee(4) & regFee(5) & regFee(6) &
         regFee(7) & regFee(8) & regFee(9) & regFee(10) & regFee(11) & regFee(12) & regFee(13) & regFee(14) &
-        regFee(15) & regFee(16)
-        '"--------------------------------------------Catering Fees----------------------------------------------------" & vbNewLine &
-        '"-------------------------------------------------------------------------------------------------------------" & vbNewLine &
-        'catPrice(0) & catPrice(1) & catPrice(2) & catPrice(3) & catPrice(4) & catPrice(5) & catPrice(6) &
-        'catPrice(7) & catPrice(8) & catPrice(9) & catPrice(10)
+        regFee(15) & regFee(16) & vbNewLine &
+        catfHead & catering
         NoteStart(Me.regPrice)
 
 

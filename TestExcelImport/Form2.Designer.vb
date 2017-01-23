@@ -22,16 +22,23 @@ Partial Class Form2
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
+        'TextBox1
+        '
+        Me.TextBox1.Location = New System.Drawing.Point(98, 38)
+        Me.TextBox1.Name = "TextBox1"
+        Me.TextBox1.Size = New System.Drawing.Size(63, 20)
+        Me.TextBox1.TabIndex = 2
+        '
         'Button1
         '
-        Me.Button1.Anchor = System.Windows.Forms.AnchorStyles.Bottom
-        Me.Button1.Location = New System.Drawing.Point(98, 237)
+        Me.Button1.Location = New System.Drawing.Point(86, 178)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 1
+        Me.Button1.TabIndex = 3
         Me.Button1.Text = "Button1"
         Me.Button1.UseVisualStyleBackColor = True
         '
@@ -41,11 +48,14 @@ Partial Class Form2
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(284, 261)
         Me.Controls.Add(Me.Button1)
+        Me.Controls.Add(Me.TextBox1)
         Me.Location = New System.Drawing.Point(12, 45)
         Me.Name = "Form2"
         Me.Text = "Form2"
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
     Friend WithEvents Button1 As Button
+    Friend WithEvents TextBox1 As TextBox
 End Class
