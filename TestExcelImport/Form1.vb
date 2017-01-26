@@ -164,9 +164,7 @@ Public Class Form1
         '    modSet.Tables(0).GetChanges()
         '    modSet.Tables(0).AcceptChanges()
 
-        ' Form2.Height = Height
-        'Form2.Width = Width
-        'Form2.Show()
+
 
 
         'Parse Excel File for values, add them if they're not null or 0
