@@ -30,4 +30,10 @@
     Private Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click
         Hide()
     End Sub
+
+    Private Sub Button7_Click(sender As Object, e As EventArgs) Handles Button7.Click
+        Form3.Show()
+        Form3.TextBox2.Hide()
+        Form3.Label2.Hide()
+    End Sub
 End Class
