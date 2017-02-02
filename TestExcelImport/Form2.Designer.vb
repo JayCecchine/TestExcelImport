@@ -22,12 +22,14 @@ Partial Class Form2
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form2))
         Me.Button1 = New System.Windows.Forms.Button()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Button4 = New System.Windows.Forms.Button()
         Me.Button5 = New System.Windows.Forms.Button()
         Me.Button3 = New System.Windows.Forms.Button()
         Me.Button6 = New System.Windows.Forms.Button()
+        Me.Wheat = New System.Windows.Forms.Button()
         Me.Button7 = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
@@ -73,11 +75,12 @@ Partial Class Form2
         Me.Button3.Name = "Button3"
         Me.Button3.Size = New System.Drawing.Size(141, 25)
         Me.Button3.TabIndex = 8
-        Me.Button3.Text = "Button3"
+        Me.Button3.Text = "Employee Discount"
         Me.Button3.UseVisualStyleBackColor = True
         '
         'Button6
         '
+        Me.Button6.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.Button6.Location = New System.Drawing.Point(98, 174)
         Me.Button6.Name = "Button6"
         Me.Button6.Size = New System.Drawing.Size(75, 23)
@@ -85,29 +88,42 @@ Partial Class Form2
         Me.Button6.Text = "Done"
         Me.Button6.UseVisualStyleBackColor = True
         '
+        'Wheat
+        '
+        Me.Wheat.Location = New System.Drawing.Point(159, 57)
+        Me.Wheat.Name = "Wheat"
+        Me.Wheat.Size = New System.Drawing.Size(114, 25)
+        Me.Wheat.TabIndex = 10
+        Me.Wheat.Text = "Wheat Leveling"
+        Me.Wheat.UseVisualStyleBackColor = True
+        '
         'Button7
         '
-        Me.Button7.Location = New System.Drawing.Point(159, 57)
+        Me.Button7.Location = New System.Drawing.Point(160, 86)
         Me.Button7.Name = "Button7"
-        Me.Button7.Size = New System.Drawing.Size(114, 25)
-        Me.Button7.TabIndex = 10
-        Me.Button7.Text = "Wheat Leveling"
+        Me.Button7.Size = New System.Drawing.Size(113, 23)
+        Me.Button7.TabIndex = 11
+        Me.Button7.Text = "Correct Item Levels"
         Me.Button7.UseVisualStyleBackColor = True
         '
         'Form2
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.CancelButton = Me.Button6
         Me.ClientSize = New System.Drawing.Size(285, 203)
         Me.Controls.Add(Me.Button7)
+        Me.Controls.Add(Me.Wheat)
         Me.Controls.Add(Me.Button6)
         Me.Controls.Add(Me.Button3)
         Me.Controls.Add(Me.Button5)
         Me.Controls.Add(Me.Button4)
         Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.Button1)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Location = New System.Drawing.Point(12, 45)
         Me.Name = "Form2"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Miscellaneous Scripts"
         Me.ResumeLayout(False)
 
@@ -118,5 +134,6 @@ Partial Class Form2
     Friend WithEvents Button5 As Button
     Friend WithEvents Button3 As Button
     Friend WithEvents Button6 As Button
+    Friend WithEvents Wheat As Button
     Friend WithEvents Button7 As Button
 End Class

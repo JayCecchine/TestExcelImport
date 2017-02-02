@@ -9,7 +9,10 @@ Public Class Form1
     Dim modSet As New DataSet
     Dim regPrice As String
     Dim catPrice As String
+    'greenLight is for telling the program whether or not ExcelConverter ran successfully
+    Dim greenLight As Integer = 0
     Const WM_SETTEXT As Integer = &HC
+
     <DllImport("user32.dll")>
     Private Shared Function SendMessage(hWnd As IntPtr, Msg As Integer, wParam As IntPtr, <MarshalAs(UnmanagedType.LPStr)> lParam As String) As IntPtr
     End Function
@@ -20,7 +23,6 @@ Public Class Form1
         Clipboard.SetDataObject(strCopyMe)
 
         'open notepad and wait for it to completely load
-        'Dim p As System.Diagnostics.Process = System.Diagnostics.Process.Start("notepad.exe")
         Dim p As New Process()
         p.StartInfo.FileName = "notepad.exe"
         p.Start()
@@ -40,6 +42,7 @@ Public Class Form1
 
         'If use does not hit ok when selecting file, function does nothing
         If openFile.ShowDialog() <> DialogResult.OK Then
+            greenLight = 0
             Exit Sub
         End If
 
@@ -50,14 +53,14 @@ Public Class Form1
 
         'The following is protection against incorrectly formatted AP sheets, since I don't know how
         'to automatically fix this yet, I will just have the parser stop and not create the data table
-        Dim thisSheet = thisFile.Sheets(1).usedRange
+        'Dim thisSheet = thisFile.Sheets(1).usedRange
 
-        Console.WriteLine()
+        'MsgBox(thisSheet.cells(1, 19).value.ToString)
 
-        If thisSheet.cells(1, 1).value.ToString <> "REGULAR" Then
-            MsgBox("This excel sheet is not formatted properly.")
-            Exit Sub
-        End If
+        'If thisSheet.cells(1, 1).value.ToString <> "REGULAR" And thisSheet.cells(1, 19).value.ToString <> "CATERING" Then
+        '    MsgBox("This excel sheet is not formatted properly.")
+        '    Exit Sub
+        'End If
         'For every sheet, create a new data table that is called Table1,2,3 etc
         For s As Integer = 1 To thisFile.Sheets.Count
             Dim returnTable As New System.Data.DataTable
@@ -90,6 +93,7 @@ Public Class Form1
 
         'DataGridView1.DataSource = returnSet.Tables(0).DefaultView 'Or whatever
 
+        greenLight = 1
         thisFile.Close()
         xlBooks.Close()
         xl.Quit()
@@ -187,6 +191,7 @@ Public Class Form1
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Button3.Hide()
+        APManual()
     End Sub
 
 
@@ -196,11 +201,19 @@ Public Class Form1
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-        Try
-            PriceScripts()
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
+        Dim m = modSet.Tables(0)
+
+        If modSet IsNot Nothing Then
+            Try
+                PriceScripts()
+            Catch ex As Exception
+                MsgBox(ex.Message)
+            End Try
+        Else
+            MsgBox("Choose a file first!")
+            Exit Sub
+        End If
+
     End Sub
 
     Sub PriceScripts()
@@ -216,7 +229,7 @@ Public Class Form1
         Dim menuLevel(52) As String
         Dim catering As String
         Dim m = modSet.Tables(0)
-        Dim regpHead, catpHead, regfHead, catfHead As String
+        Dim regpHead, catpHead, regfHead, catfHead, ezHead As String
         Dim test As Integer
         Dim count As Integer
 
@@ -259,8 +272,6 @@ Public Class Form1
         Else
             regPrice(6) = ""
         End If
-        'X Bacon... do I need a separate If Statment here?
-        'It'd be m.row(7).item(1) if so, For now I am ignoring it
         If m.Rows(8).Item(1).ToString() IsNot "" Then
             regPrice(8) = String.Format("--Cheese--" & vbNewLine & u & "where itemnum in (118,212,219,211)" & vbNewLine, m.Rows(8).Item(1).ToString())
         Else
@@ -539,10 +550,53 @@ Public Class Form1
                     catStore(10) = ""
                 End If
                 catering = catStore(0) & catStore(1) & catStore(2) & catStore(3) & catStore(4) & catStore(5) & catStore(6) & catStore(7) & catStore(8) & catStore(9) & catStore(10)
-
-
-
         End Select
+
+        'MenuItemLevel Scripts, for EZ Meat,Cheese & Avo
+        Dim v = vbNewLine
+        Dim a = "update tblMenuItemLevel set ItemPrice1= @amt1 " & "where itemnum = {0} " & v & "and itemlevel in "
+
+        Dim meat = m.Rows(6).Item(1).ToString
+        Dim cheese = m.Rows(8).Item(1).ToString
+        Dim avo = m.Rows(9).Item(1).ToString
+        Dim ezMeat(52) As String
+        Dim ezMeats As String
+        Dim ezCheAvo(52) As String
+        Dim ezItems As String
+
+        If meat IsNot "" Then
+            ezMeat(0) = String.Format("DECLARE @amt1 as money" & v & v & "--Set Price 1--" & v &
+                    "SET @amt1= '" & meat & "'" & v & v & "--Reset Meats to 0--" & v & "update tblmenuitemlevel set itemprice1 = 0 " &
+            v & "where itemnum in (247, 450, 451, 452, 453, 454, 455, 456)" & v & v & "/****E-Z Vito****/" & v & a & "(1,2,3,4,5,6,7,8,9,10,11,13,14,15,16,17,18,19,20,21,22,23,24,25)", 247)
+            ezMeat(1) = String.Format("/****E-Z Ham****/" & v & a & "(2,3,4,5,6,7,9,10,11,12,13,14,18,20,21,22,23,24)", 450)
+            ezMeat(2) = String.Format("/****E-Z Turkey****/" & v & a & "(1,2,3,5,6,7,8,9,10,12,13,14,15,16,17,18,21,23,25)", 451)
+            ezMeat(3) = String.Format("/****E-Z Tuna****/" & v & a & "(1,2,4,5,6,7,8,9,11,12,13,14,15,16,17,18,19,20,21,22,24,25,26)", 452)
+            ezMeat(4) = String.Format("/****E-Z Bacon****/" & v & a & "(1,2,3,4,5,6,8,9,10,11,12,13,15,16,17,18,19,20,21,22,23,26)", 453)
+            ezMeat(5) = String.Format("/****E-Z Salami****/" & v & a & "(1,2,3,4,6,7,8,9,10,11,13,14,15,16,18,19,20,21,22,23,24,25)", 454)
+            ezMeat(6) = String.Format("/****E-Z Cap****/" & v & a & "(1,2,3,4,6,7,8,9,10,11,13,14,15,16,18,19,20,21,22,23,24,25)", 455)
+            ezMeat(7) = String.Format("/****E-Z Roast Beef****/" & v & a & "(1,3,4,5,6,7,8,10,11,12,13,14,15,17,19,20,21,23,24,25)", 456)
+            ezMeats = ezMeat(0) & v & ezMeat(1) & v & ezMeat(2) & v & ezMeat(3) & v & ezMeat(4) & v & ezMeat(5) & v & ezMeat(6) & v & ezMeat(7) & v
+        Else
+            For i As Integer = 0 To ezMeat.GetUpperBound(0)
+                ezMeat(i) = ""
+            Next
+        End If
+
+        If cheese IsNot "" Then
+            ezCheAvo(0) = String.Format("--E-Z Cheese--" & v & "--Reset to 0--" & v & "update tblmenuitemlevel set itemprice1 = '0' where itemnum = 211" &
+                                        v & "--Set E-Z Cheese--" & v & "update tblmenuitemlevel set itemprice1 = '" & cheese & "' where itemnum = 211 and itemlevel in (2,3,4,7,9,10,11,14,22,24,25)")
+        Else
+            ezCheAvo(0) = ""
+        End If
+
+        If avo IsNot "" Then
+            ezCheAvo(1) = String.Format("--E-Z Avo--" & v & "--Reset to 0--" & v & "update tblmenuitemlevel set itemprice1 = '0' where itemnum = 201" &
+                                        v & "--Set E-Z Avo--" & v & "update tblmenuitemlevel set itemprice1 = '" & avo & "' where itemnum = 201 and itemlevel in (13, 20, 21)")
+        Else
+            ezCheAvo(1) = ""
+        End If
+
+        ezItems = ezMeats & ezCheAvo(0) & v & ezCheAvo(1)
 
         'Determining if there are values in the array, if there are no values, it will not generate a heading
         For i As Integer = 0 To regPrice.GetUpperBound(0)
@@ -556,9 +610,9 @@ Public Class Form1
             regpHead = ""
         Else
             regpHead = "" & vbNewLine &
-                "-------------------------------------------------------------------------------------------------------------" & vbNewLine &
-                "-------------------------------------------Regular Prices----------------------------------------------------" & vbNewLine &
-                "-------------------------------------------------------------------------------------------------------------" & vbNewLine
+                "---------------------------------------------------------------------------------------------------------------" & vbNewLine &
+                "---------------------------------------------Regular Prices----------------------------------------------------" & vbNewLine &
+                "---------------------------------------------------------------------------------------------------------------" & vbNewLine
         End If
         count = 0
         For i As Integer = 0 To catPrice.GetUpperBound(0)
@@ -603,6 +657,18 @@ Public Class Form1
                 "-------------------------------------------------------------------------------------------------------------" & vbNewLine
         End If
 
+        If ezItems = "" Then
+            ezHead = ""
+        Else
+            ezHead = "" & vbNewLine &
+                "-------------------------------------------------------------------------------------------------------------" & vbNewLine &
+                "--------------------------------------------E-Z MenuItemLevels-----------------------------------------------" & vbNewLine &
+                "-------------------------------------------------------------------------------------------------------------" & vbNewLine
+        End If
+
+
+
+
         Me.regPrice = "use PDQPOS" & vbNewLine & "go" & vbNewLine &
         regpHead &
         regPrice(0) & regPrice(1) & regPrice(2) & regPrice(3) & regPrice(4) & regPrice(5) & regPrice(6) & regPrice(7) &
@@ -615,7 +681,9 @@ Public Class Form1
         regFee(0) & regFee(1) & regFee(2) & regFee(3) & regFee(4) & regFee(5) & regFee(6) &
         regFee(7) & regFee(8) & regFee(9) & regFee(10) & regFee(11) & regFee(12) & regFee(13) & regFee(14) &
         regFee(15) & regFee(16) & vbNewLine &
-        catfHead & catering
+        catfHead & catering & vbNewLine &
+        ezHead & ezItems
+
         NoteStart(Me.regPrice)
     End Sub
     Public Sub FlatDeliveryFee()
@@ -628,21 +696,16 @@ Public Class Form1
                 Dim v = vbNewLine
                 flatFee = String.Format("use pdqpos" & v & "go" & v & "--Resets all Del charges to 0--" &
                     v & "UPDATE tblMenuItemExtend SET DelCharge='0.00'" & v & "--UPDATE TAX ON DELIVERY FEE--" &
-                    v & "UPDATE tblMenuItemExtend SET TaxDelCharge='False'" & v & "WHERE TransTypeID IN (3,9)" & v & "--Set Flat Fee below--" & v &
+            v & "UPDATE tblMenuItemExtend SET TaxDelCharge='False'" & v & "WHERE TransTypeID IN (3,9)" & v & "--Set Flat Fee below--" & v &
                     "UPDATE tblMenuItemExtend SET DelCharge= '{0}'" & v & "WHERE ItemNum IN (124,141,142,143,144,145,146,140,110,111,112,113,114,115,116,125,126,127,128,129,130,131,132,133,134,650,117,244,209,247,450,451,452,453,454,455,456,119,120,121,122,123,139,147,179,180,212,213,245,201,211,102,212,213,118,219,102,220,162,182,183,221,222,223,224,255,256,257,259,258,598,675,597,190,191,192,193,194,196,197,237,238,239,240,241,242,243,340,341,362,198,202,203,204,205,206,207,208,342,358,359,380,381,382,383,384,385,388,344,345,346,360,361,364,365,366,862,444,155,215,216,676,921,922,923,924,925,926,927,928,929,930,931)
                     AND TransTypeID IN (3,9)", flatFeeVal)
                 NoteStart(flatFee)
-
             Else
-                Form3.Show()
-                Form3.Button1.Hide()
-                Form3.TextBox2.Hide()
-                Form3.Label2.Hide()
-                Form3.Label1.Text = "FlatFee"
+                Form3.FormAdjust("Flat")
             End If
 
         Catch
-            MsgBox("You did something stupid")
+            MsgBox("What.. did you DO.")
         End Try
 
 
@@ -664,7 +727,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+    Private Sub Button1_Click(sender As Object, e As EventArgs)
         Try
             APTable()
         Catch ex As Exception
@@ -686,17 +749,313 @@ Public Class Form1
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
 
-        Dim returnset As New DataSet
-            Dim modset As New DataSet
-        returnset.Clear()
-        modset.Clear()
-
+        'Clears the datagridview whenever the user chooses a new file
+        returnSet.Tables.Clear()
+        modSet.Tables.Clear()
+        DataGridView1.DataSource = modSet
 
         Try
             ExcelConverter()
+            If greenLight = 0 Then
+                APManual()
+                Exit Sub
+            ElseIf greenLight = 1 Then
+                APTable()
+            End If
         Catch ex As Exception
 
         End Try
 
     End Sub
+    Sub APTableParse()
+        'Purpose of this Sub is to parse the loaded excel sheet for the purpose of creating a new data table
+        Dim bobert As String
+        Dim modTable As New System.Data.DataTable
+        Dim m = modSet.Tables(0)
+        Dim newRow As DataRow = modTable.NewRow()
+        For r As Integer = 0 To m.Rows.Count - 1
+            'Dim newRow As DataRow = returnTable.NewRow()
+            For c As Integer = 0 To m.Columns.Count - 1
+                If m.Rows(r).Item(c).ToString = Nothing Then
+                    bobert = ""
+                    Console.WriteLine("newRow(" & c & ")" & " = " & Chr(34) & Chr(34))
+                Else
+                    bobert = String.Format("newRow(" & c & ")" & " = " & Chr(34) & "{0}" & Chr(34), m.Rows(r).Item(c))
+
+                    Console.WriteLine(bobert)
+                End If
+            Next
+            Console.WriteLine("modTable.Rows.Add(newRow)")
+            Console.WriteLine("newRow = modTable.NewRow()")
+        Next
+
+
+    End Sub
+
+    Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles Button1.Click
+        'APTableParse()
+        returnSet.Tables.Clear()
+        modSet.Tables.Clear()
+        APManual()
+    End Sub
+    Sub APManual()
+
+        Button3.Show()
+
+        Dim modTable As New System.Data.DataTable
+
+
+        'Creating the new DataTable
+        '   Creating the predefined columns
+        modTable.Columns.Add("Regular")
+        modTable.Columns.Add("Sub Total")
+        modTable.Columns.Add("Delivery Fee")
+        modTable.Columns.Add("Catering")
+        modTable.Columns.Add("Cat Sub Total")
+        modTable.Columns.Add("Cat Delivery Fee")
+
+        Dim newRow As DataRow = modTable.NewRow()
+
+        newRow(0) = "Slims"
+        newRow(1) = ""
+        newRow(2) = ""
+        newRow(3) = "15 piece (Platters)"
+        newRow(4) = ""
+        newRow(5) = ""
+        modTable.Rows.Add(newRow)
+        newRow = modTable.NewRow()
+        newRow(0) = "Subs"
+        newRow(1) = ""
+        newRow(2) = ""
+        newRow(3) = "30 piece"
+        newRow(4) = ""
+        newRow(5) = ""
+        modTable.Rows.Add(newRow)
+        newRow = modTable.NewRow()
+        newRow(0) = "Clubs"
+        newRow(1) = ""
+        newRow(2) = ""
+        newRow(3) = "Club Upcharge"
+        newRow(4) = ""
+        newRow(5) = ""
+        modTable.Rows.Add(newRow)
+        newRow = modTable.NewRow()
+        newRow(0) = "Garg"
+        newRow(1) = ""
+        newRow(2) = ""
+        newRow(3) = "Slim box (Boxes)"
+        newRow(4) = ""
+        newRow(5) = ""
+        modTable.Rows.Add(newRow)
+        newRow = modTable.NewRow()
+        newRow(0) = "Fresh Bread"
+        newRow(1) = ""
+        newRow(2) = ""
+        newRow(3) = "Sub box"
+        newRow(4) = ""
+        newRow(5) = ""
+        modTable.Rows.Add(newRow)
+        newRow = modTable.NewRow()
+        newRow(0) = "Day Old Bread"
+        newRow(1) = ""
+        newRow(2) = ""
+        newRow(3) = "Club box"
+        newRow(4) = ""
+        newRow(5) = ""
+        modTable.Rows.Add(newRow)
+        newRow = modTable.NewRow()
+        newRow(0) = "X Meat"
+        newRow(1) = ""
+        newRow(2) = ""
+        newRow(3) = "Garg box"
+        newRow(4) = ""
+        newRow(5) = ""
+        modTable.Rows.Add(newRow)
+        newRow = modTable.NewRow()
+        newRow(0) = "X Bacon"
+        newRow(1) = ""
+        newRow(2) = ""
+        newRow(3) = "Pickle Bucket"
+        newRow(4) = ""
+        newRow(5) = ""
+        modTable.Rows.Add(newRow)
+        newRow = modTable.NewRow()
+        newRow(0) = "X Cheese"
+        newRow(1) = ""
+        newRow(2) = ""
+        newRow(3) = "Cookie Box (6)"
+        newRow(4) = ""
+        newRow(5) = ""
+        modTable.Rows.Add(newRow)
+        newRow = modTable.NewRow()
+        newRow(0) = "X Avocado"
+        newRow(1) = ""
+        newRow(2) = ""
+        newRow(3) = "Mini 12"
+        newRow(4) = ""
+        newRow(5) = ""
+        modTable.Rows.Add(newRow)
+        newRow = modTable.NewRow()
+        newRow(0) = "Pickles"
+        newRow(1) = ""
+        newRow(2) = ""
+        newRow(3) = "Mini 24"
+        newRow(4) = ""
+        newRow(5) = ""
+        modTable.Rows.Add(newRow)
+        newRow = modTable.NewRow()
+        newRow(0) = "Chips"
+        newRow(1) = ""
+        newRow(2) = ""
+        newRow(3) = ""
+        newRow(4) = ""
+        newRow(5) = ""
+        modTable.Rows.Add(newRow)
+        newRow = modTable.NewRow()
+        newRow(0) = "Med Soda"
+        newRow(1) = ""
+        newRow(2) = ""
+        newRow(3) = "Delivery Cap:"
+        newRow(4) = ""
+        newRow(5) = ""
+        modTable.Rows.Add(newRow)
+        newRow = modTable.NewRow()
+        newRow(0) = "LG Soda"
+        newRow(1) = ""
+        newRow(2) = ""
+        newRow(3) = "Flat Del Fee:"
+        newRow(4) = ""
+        newRow(5) = ""
+        modTable.Rows.Add(newRow)
+        newRow = modTable.NewRow()
+        newRow(0) = "Can Pop"
+        newRow(1) = ""
+        newRow(2) = ""
+        newRow(3) = "Use Cat Fees:"
+        newRow(4) = ""
+        newRow(5) = ""
+        modTable.Rows.Add(newRow)
+        newRow = modTable.NewRow()
+        newRow(0) = "Bottled Water"
+        newRow(1) = ""
+        newRow(2) = ""
+        newRow(3) = "Tax Del Fees:"
+        newRow(4) = ""
+        newRow(5) = ""
+        modTable.Rows.Add(newRow)
+        newRow = modTable.NewRow()
+        newRow(0) = "Cookies"
+        newRow(1) = ""
+        newRow(2) = ""
+        newRow(3) = "Tax Cat Fees:"
+        newRow(4) = ""
+        newRow(5) = ""
+        modTable.Rows.Add(newRow)
+        modSet.Tables.Add(modTable)
+        DataGridView1.DataSource = modSet.Tables(0).DefaultView
+
+    End Sub
+    Public Sub EmpDisc(getString As String)
+        Dim v = vbNewLine
+        Dim outPut As String
+        outPut = String.Format("Use PDQPOS" & v &
+                "go" & v &
+                "declare @per as money" & v &
+                "--set percentage as a decimal (50% = .5)--" & v &
+                "set @per  = '{0}'" & v &
+                "declare @slim as money" & v &
+                "set @slim = (select price1 from tblMenuItems where ItemNum = 141)" & v &
+                "declare @sub as money" & v &
+                "set @sub = (select price1 from tblMenuItems where ItemNum = 110)" & v &
+                "declare @club as money" & v &
+                "set @club = (select price1 from tblMenuItems where ItemNum = 125)" & v &
+                "--Employee Slim--" & v &
+                "update tblMenuCoup set Amount =  ROund(-1*(@slim * @per),2), TypeID = 1, MaxAmount = Round((@slim * @per),2)" & v &
+                "where Name in('Employee Slim')" & v &
+                "--Employee Sub--" & v &
+                "update tblMenuCoup set Amount =  Round(-1*(@sub * @per),2), TypeID = 1, MaxAmount = Round((@sub * @per),2)" & v &
+                "where Name in('Employee Sub')" & v &
+                "--Employee Club--" & v &
+                "update tblMenuCoup set Amount =  Round(-1*(@club * @per),2), TypeID = 1, MaxAmount = Round((@club * @per),2)" & v &
+                "where Name in('Employee Club')" & v &
+                "select * from tblMenuCoup where Name in ('Employee Slim','Employee Sub','Employee Club')", getString)
+        NoteStart(outPut)
+    End Sub
+    Sub CorrectItemLevel()
+        Dim v = vbNewLine
+        Dim correctItem = String.Format("use PDQPOS" & v &
+        "go" & v & v &
+        "/****** Update Slim Item Levels ******/" & v &
+        "update tblMenuItems set ItemLevel='1' where ItemNum in (141,291)" & v &
+        "update tblMenuItems set ItemLevel='2' where ItemNum in (142,292)" & v &
+        "update tblMenuItems set ItemLevel='3' where ItemNum in (143,293)" & v &
+        "update tblMenuItems set ItemLevel='4' where ItemNum in (144,294)" & v &
+        "update tblMenuItems set ItemLevel='5' where ItemNum in (145,295)" & v &
+        "update tblMenuItems set ItemLevel='6' where ItemNum in (146,296)" & v &
+        "update tblMenuItems set ItemLevel='7' where ItemNum in (147,297)" & v & v &
+        "/****** Update Sub Item Levels ******/" & v &
+        "update tblMenuItems set ItemLevel='8' where ItemNum in (110,306)" & v &
+        "update tblMenuItems set ItemLevel='9' where ItemNum in (111,307,495,496)" & v &
+        "update tblMenuItems set ItemLevel='10' where ItemNum in (112,308)" & v &
+        "update tblMenuItems set ItemLevel='11' where ItemNum in (113,309)" & v &
+        "update tblMenuItems set ItemLevel='12' where ItemNum in (114,310)" & v &
+        "update tblMenuItems set ItemLevel='13' where ItemNum in (115,311)" & v &
+        "update tblMenuItems set ItemLevel='14' where ItemNum in (116,312)" & v &
+        "update tblMenuItems set ItemLevel='26' where ItemNum in (117,323)" & v & v &
+        "/****** Update Club Item Levels ******/" & v &
+        "update tblMenuItems set ItemLevel='15' where ItemNum in (125,313)" & v &
+        "update tblMenuItems set ItemLevel='16' where ItemNum in (126,314)" & v &
+        "update tblMenuItems set ItemLevel='17' where ItemNum in (127,315)" & v &
+        "update tblMenuItems set ItemLevel='18' where ItemNum in (128,316)" & v &
+        "update tblMenuItems set ItemLevel='19' where ItemNum in (129,317)" & v &
+        "update tblMenuItems set ItemLevel='20' where ItemNum in (130,318)" & v &
+        "update tblMenuItems set ItemLevel='21' where ItemNum in (131,319)" & v &
+        "update tblMenuItems set ItemLevel='22' where ItemNum in (132,320)" & v &
+        "update tblMenuItems set ItemLevel='23' where ItemNum in (133,321)" & v &
+        "update tblMenuItems set ItemLevel='24' where ItemNum in (134,322)" & v &
+        "update tblMenuItems set ItemLevel='25' where ItemNum in (650,651)" & v &
+        "update tblMenuItems set ItemLevel='26' where ItemNum in (117,323)" & v & v &
+        "/****** Update Party Sub Item Levels ******/" & v &
+        "update tblMenuItems set ItemLevel='27' where ItemNum='700'" & v &
+        "update tblMenuItems set ItemLevel='28' where ItemNum='701'" & v &
+        "update tblMenuItems set ItemLevel='29' where ItemNum='702'" & v &
+        "update tblMenuItems set ItemLevel='30' where ItemNum='703'" & v &
+        "update tblMenuItems set ItemLevel='31' where ItemNum='704'" & v &
+        "update tblMenuItems set ItemLevel='32' where ItemNum='705'" & v &
+        "update tblMenuItems set ItemLevel='33' where ItemNum='706'" & v & v &
+        "/****** Update Dubbuhgutbustuh Item Level ******/" & v &
+        "update tblMenuItems set ItemLevel='34' where ItemNum='800'")
+        Clipboard.SetDataObject(correctItem)
+    End Sub
+    Sub BuildAuto(getString As String)
+        Try
+            Dim delCap As String
+            Dim m = modSet.Tables(0)
+            Dim delCapVal = m.Rows(12).Item(4).ToString
+
+            If delCapVal.Length > 0 Then
+                Dim v = vbNewLine
+                delCap = String.Format("use pdqpos" & v & "go" & v & "--Resets all Del charges to 0--" &
+                    v & "UPDATE tblMenuItemExtend SET DelCharge='0.00'" & v & "--UPDATE TAX ON DELIVERY FEE--" &
+            v & "UPDATE tblMenuItemExtend SET TaxDelCharge='False'" & v & "WHERE TransTypeID IN (3,9)" & v & "--Set Flat Fee below--" & v &
+                    "UPDATE tblMenuItemExtend SET DelCharge= '{0}'" & v & "WHERE ItemNum IN (124,141,142,143,144,145,146,140,110,111,112,113,114,115,116,125,126,127,128,129,130,131,132,133,134,650,117,244,209,247,450,451,452,453,454,455,456,119,120,121,122,123,139,147,179,180,212,213,245,201,211,102,212,213,118,219,102,220,162,182,183,221,222,223,224,255,256,257,259,258,598,675,597,190,191,192,193,194,196,197,237,238,239,240,241,242,243,340,341,362,198,202,203,204,205,206,207,208,342,358,359,380,381,382,383,384,385,388,344,345,346,360,361,364,365,366,862,444,155,215,216,676,921,922,923,924,925,926,927,928,929,930,931)
+                    AND TransTypeID IN (3,9)", delCapVal)
+                NoteStart(delCap)
+
+            Else
+                Form3.Show()
+                Form3.Text = "Delivery Cap"
+                Form3.Button4.Show()
+                Form3.AcceptButton = Button4
+                Form3.Label1.Text = "Del Cap"
+
+            End If
+
+        Catch
+            MsgBox("What.. did you DO.")
+        End Try
+    End Sub
+
 End Class
+
+

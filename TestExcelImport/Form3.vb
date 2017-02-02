@@ -3,17 +3,15 @@
         Dim price1, price2 As String
         price1 = TextBox1.Text.ToString
 
-        ' Try
-        Select Case price1
-            Case ""
-                MsgBox("Enter something, Dumbass")
-            Case price1.Length > 0
-                price1 = TextBox1.Text.ToString
-                price2 = TextBox2.Text.ToString
-                Form1.Wheat(price1)
-                Hide()
-        End Select
-        'Catch ex(messagebox(ex)
+        If price1.Length > 0 Then
+            price1 = TextBox1.Text.ToString
+            Form1.Wheat(price1)
+            Close()
+        Else
+            MsgBox("Enter a value.")
+            Exit Sub
+        End If
+
     End Sub
     Public Sub FlatFeeManual()
         Dim v = vbNewLine
@@ -30,15 +28,25 @@
                  AND TransTypeID IN (3,9)", flatFeeVal)
             Form1.NoteStart(flatFee)
         Else
-            MsgBox("Enter a flat fee.")
+            MsgBox("Enter a value.")
+            Exit Sub
         End If
 
+        Close()
 
         'End Select
 
     End Sub
-    Private Sub Form3_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+
+    Private Sub Form3_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Button1.Hide()
+        Button2.Hide()
+        Button3.Hide()
+        Label2.Hide()
+        TextBox2.Hide()
+        TextBox3.Hide()
+        TextBox4.Hide()
     End Sub
     Private Sub TextBox_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles TextBox1.KeyPress
         If Not Char.IsNumber(e.KeyChar) AndAlso Not Char.IsControl(e.KeyChar) AndAlso Not e.KeyChar = "." Then
@@ -53,4 +61,145 @@
             MsgBox(exception)
         End Try
     End Sub
+
+
+
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+
+        Dim empDiscount = TextBox1.Text.ToString
+        If empDiscount.Length > 0 Then
+            empDiscount = TextBox1.Text.ToString
+            Form1.EmpDisc(empDiscount)
+            Close()
+        Else
+            MsgBox("Enter a value.")
+            Exit Sub
+        End If
+    End Sub
+
+    Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+        Try
+            BuildManual()
+        Catch ex As Exception
+            MsgBox(ex)
+        End Try
+    End Sub
+    Private Sub BuildManual()
+        Dim v = vbNewLine
+        Dim buildThis As String
+        Dim delCapVal As String = TextBox1.Text.ToString
+        Dim catCapVal As String = ""
+        Dim taxDelVal As String = TextBox3.text.ToString
+        Dim Taxcatval As String = TextBox4.text.ToString
+
+        If delCapVal.Length > 0 And taxDelVal.Length > 0 And Taxcatval.Length > 0 Then
+            buildThis = String.Format("USE PDQPOS" & v &
+            "GO" & v &
+            "UPDATE tblconfigmain SET optvalue='False' WHERE optname='LegacyOrderCalc' AND optgroup='AdvOrderCalc'" & v &
+            "UPDATE tblconfigmain SET optvalue='True' WHERE optname='AdvDelChargePerItem' AND optgroup='AdvOrderCalc'" & v &
+            "UPDATE tblconfigmain SET optvalue='{0}' WHERE optname='AdvDelChargeMax' AND optgroup='AdvOrderCalc'" & v &
+            "--UPDATE tblconfigmain SET optvalue='{1}' WHERE optname='AdvDelCaterChargeMax' AND" & v &
+            "optgroup='AdvOrderCalc'" & v &
+            "UPDATE tblconfigmain SET optvalue='True' WHERE optname='JJAdvancedView' AND optgroup='MenuEntry'" & v &
+            "UPDATE tblConfigMain SET OptValue = 'True'  WHERE OptName = 'AdvancedOOAPI' AND OptGroup='OnlineOrdering'" & v &
+            "UPDATE [PDQPOS].[dbo].[tblDescTransType] SET [DescItemPriceIndex]=1" & v &
+            "UPDATE [PDQPOS].[dbo].[tblConfigMain] SET [OptValue]= '{2}' WHERE [OptName] = 'TaxDeliveryCharge'" & v &
+            "UPDATE [PDQPOS].[dbo].[tblConfigMain] SET [OptValue]= '{3}' WHERE [OptName] = 'TaxCateringCharge'" & v &
+            "DECLARE @TaxDelCharge BIT" & v &
+                "SELECT @TaxDelCharge =COUNT(*)" & v &
+                "FROM tblConfigMain" & v &
+                "WHERE tblConfigMain.OptGroup='DeliveryCharges' AND tblConfigMain.OptName ='TaxDeliveryCharge' AND OptValue='true'" & v &
+            "INSERT INTO [tblOrderItemExtend]" & v &
+                       "([OrderID]" & v &
+                       ",[ItemUID]" & v &
+                       ",[TransTypeID]" & v &
+                       ",[PriceIndex]" & v &
+                       ",[ItemPrice]" & v &
+                       ",[AltItemPrice]" & v &
+                       ",[DelCharge]" & v &
+                       ",[TaxItem]" & v &
+                       ",[TaxDelCharge]" & v &
+                       ",[TaxRateID]" & v &
+                       ",[TaxRate]" & v &
+                       ",[AdvTaxAmountItem]" & v &
+                       ",[AdvTaxAmountDelCharge]" & v &
+                       ",[LinkedSmartCoupID])" & v &
+                 "SELECT ITM.OrderID,ITM.ItemID ," & v &
+                 "transtypeid, PriceIndex,ItemPrice,AltPrice,ITM.DelCharge,ChargeTax" & v &
+                 ", @TaxDelCharge AS 'TaxDelCharge',ITM.TaxRateID," & v &
+                 "ISNULL((SELECT TaxRate FROM tblConfigTaxRate" & v &
+                 "WHERE TaxRateID=ITM.TaxRateID),0)" & v &
+                 ",ITM.ItemTax, ITM.DelChargeTax" & v &
+                 ",'00000000-0000-0000-0000-000000000000'" & v &
+                  "FROM tblOrderItems AS ITM" & v &
+                 "INNER JOIN tblOrders ON tblOrders.OrderID=ITM.OrderID" & v &
+                 "WHERE ITM.ItemID NOT IN (SELECT [ItemUID] FROM tblOrderItemExtend)" & v &
+            "------------------------------------------------------------------------------------------------------------------------------------------------------------------" & v &
+            "------------------------------------------------------------------------------------------------------------------------------------------------------------------" & v &
+            "------------------------------------------------------------------------------------------------------------------------------------------------------------------" & v &
+            "------------------------------------------------------------------------------------------------------------------------------------------------------------------" & v &
+            "INSERT INTO [tblDelayOrderItemExtend]" & v &
+                       "([OrderID]" & v &
+                       ",[ItemUID]" & v &
+                       ",[TransTypeID]" & v &
+                       ",[PriceIndex]" & v &
+                       ",[ItemPrice]" & v &
+                       ",[AltItemPrice]" & v &
+                       ",[DelCharge]" & v &
+                       ",[TaxItem]" & v &
+                       ",[TaxDelCharge]" & v &
+                       ",[TaxRateID]" & v &
+                       ",[TaxRate]" & v &
+                       ",[AdvTaxAmountItem]" & v &
+                       ",[AdvTaxAmountDelCharge]" & v &
+                       ",[LinkedSmartCoupID])" & v &
+                 "SELECT ITM.OrderID,ITM.ItemID ," & v &
+                 "transtypeid, PriceIndex,ItemPrice,AltPrice,ITM.DelCharge,ChargeTax" & v &
+                 ", @TaxDelCharge AS 'TaxDelCharge',ITM.TaxRateID," & v &
+                 "ISNULL((SELECT TaxRate FROM tblConfigTaxRate" & v &
+                 "WHERE TaxRateID=ITM.TaxRateID),0)" & v &
+                 ",ITM.ItemTax, ITM.DelChargeTax" & v &
+                 ",'00000000-0000-0000-0000-000000000000'" & v &
+                 "FROM tblDelayOrderItems AS ITM" & v &
+                 "INNER JOIN tblDelayOrders ON tblDelayOrders.OrderID=ITM.OrderID" & v &
+                 "WHERE ITM.ItemID NOT IN (SELECT [ItemUID] FROM tblDelayOrderItemExtend) AND tblDelayOrders.Settled=0", delCapVal, catCapVal, taxDelVal, Taxcatval)
+
+            Form1.NoteStart(buildThis)
+        Else
+            MsgBox("Enter a value.")
+            Exit Sub
+        End If
+
+        Close()
+    End Sub
+
+    Sub FormAdjust(getString As String)
+        Select Case getString
+            Case = "Flat"
+                Show()
+                Text = "Flat Fee"
+                Button1.Hide()
+                Button2.Show()
+                Button3.Hide()
+                Button4.Hide()
+                TextBox2.Hide()
+                TextBox3.Hide()
+                TextBox4.Hide()
+                AcceptButton = Button2
+                Label2.Hide()
+                Label1.Text = "Flat Fee:"
+                Label2.Location = New Point(25, 96)
+                Label1.Location = New Point(107, 58)
+                Label2.Location = New Point(25, 96)
+                Button1.Location = New Point(94, 118)
+                Button2.Location = New Point(94, 118)
+                Button3.Location = New Point(94, 118)
+                Button4.Location = New Point(94, 118)
+                TextBox1.Location = New Point(82, 74)
+        End Select
+    End Sub
+
+
+
+
 End Class
