@@ -30,14 +30,20 @@ Partial Class Form3
         Me.Button3 = New System.Windows.Forms.Button()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Button4 = New System.Windows.Forms.Button()
-        Me.TextBox2 = New System.Windows.Forms.TextBox()
         Me.TextBox3 = New System.Windows.Forms.TextBox()
-        Me.TextBox4 = New System.Windows.Forms.TextBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.TextBox5 = New System.Windows.Forms.TextBox()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.RadioButton1 = New System.Windows.Forms.RadioButton()
+        Me.RadioButton2 = New System.Windows.Forms.RadioButton()
+        Me.RadioButton3 = New System.Windows.Forms.RadioButton()
+        Me.RadioButton4 = New System.Windows.Forms.RadioButton()
         Me.SuspendLayout()
         '
         'TextBox1
         '
-        Me.TextBox1.Location = New System.Drawing.Point(82, 74)
+        Me.TextBox1.Location = New System.Drawing.Point(126, 46)
         Me.TextBox1.Name = "TextBox1"
         Me.TextBox1.Size = New System.Drawing.Size(100, 20)
         Me.TextBox1.TabIndex = 0
@@ -54,11 +60,11 @@ Partial Class Form3
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(107, 58)
+        Me.Label1.Location = New System.Drawing.Point(56, 49)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(43, 13)
+        Me.Label1.Size = New System.Drawing.Size(70, 13)
         Me.Label1.TabIndex = 3
-        Me.Label1.Text = "Price 1:"
+        Me.Label1.Text = "Delivery Cap:"
         '
         'Button2
         '
@@ -81,11 +87,11 @@ Partial Class Form3
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(107, 97)
+        Me.Label2.Location = New System.Drawing.Point(10, 73)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(39, 13)
+        Me.Label2.Size = New System.Drawing.Size(115, 13)
         Me.Label2.TabIndex = 7
-        Me.Label2.Text = "Label2"
+        Me.Label2.Text = "Tax Delivery (Yes/No):"
         '
         'Button4
         '
@@ -96,26 +102,91 @@ Partial Class Form3
         Me.Button4.Text = "Generate"
         Me.Button4.UseVisualStyleBackColor = True
         '
-        'TextBox2
-        '
-        Me.TextBox2.Location = New System.Drawing.Point(175, 100)
-        Me.TextBox2.Name = "TextBox2"
-        Me.TextBox2.Size = New System.Drawing.Size(100, 20)
-        Me.TextBox2.TabIndex = 9
-        '
         'TextBox3
         '
-        Me.TextBox3.Location = New System.Drawing.Point(175, 126)
+        Me.TextBox3.Location = New System.Drawing.Point(150, 155)
         Me.TextBox3.Name = "TextBox3"
         Me.TextBox3.Size = New System.Drawing.Size(100, 20)
         Me.TextBox3.TabIndex = 10
         '
-        'TextBox4
+        'Label3
         '
-        Me.TextBox4.Location = New System.Drawing.Point(175, 152)
-        Me.TextBox4.Name = "TextBox4"
-        Me.TextBox4.Size = New System.Drawing.Size(100, 20)
-        Me.TextBox4.TabIndex = 11
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(105, 157)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(39, 13)
+        Me.Label3.TabIndex = 12
+        Me.Label3.Text = "Label3"
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(10, 91)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(116, 13)
+        Me.Label4.TabIndex = 13
+        Me.Label4.Text = "Tax Catering (Yes/No):"
+        '
+        'TextBox5
+        '
+        Me.TextBox5.Location = New System.Drawing.Point(52, 120)
+        Me.TextBox5.Name = "TextBox5"
+        Me.TextBox5.Size = New System.Drawing.Size(36, 20)
+        Me.TextBox5.TabIndex = 14
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(18, 123)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(28, 13)
+        Me.Label5.TabIndex = 15
+        Me.Label5.Text = "PIN:"
+        '
+        'RadioButton1
+        '
+        Me.RadioButton1.AutoSize = True
+        Me.RadioButton1.Cursor = System.Windows.Forms.Cursors.Default
+        Me.RadioButton1.Location = New System.Drawing.Point(126, 71)
+        Me.RadioButton1.Name = "RadioButton1"
+        Me.RadioButton1.Size = New System.Drawing.Size(43, 17)
+        Me.RadioButton1.TabIndex = 16
+        Me.RadioButton1.TabStop = True
+        Me.RadioButton1.Text = "Yes"
+        Me.RadioButton1.UseVisualStyleBackColor = True
+        '
+        'RadioButton2
+        '
+        Me.RadioButton2.AutoSize = True
+        Me.RadioButton2.Location = New System.Drawing.Point(173, 71)
+        Me.RadioButton2.Name = "RadioButton2"
+        Me.RadioButton2.Size = New System.Drawing.Size(39, 17)
+        Me.RadioButton2.TabIndex = 17
+        Me.RadioButton2.TabStop = True
+        Me.RadioButton2.Text = "No"
+        Me.RadioButton2.UseVisualStyleBackColor = True
+        '
+        'RadioButton3
+        '
+        Me.RadioButton3.AutoSize = True
+        Me.RadioButton3.Location = New System.Drawing.Point(126, 89)
+        Me.RadioButton3.Name = "RadioButton3"
+        Me.RadioButton3.Size = New System.Drawing.Size(43, 17)
+        Me.RadioButton3.TabIndex = 19
+        Me.RadioButton3.TabStop = True
+        Me.RadioButton3.Text = "Yes"
+        Me.RadioButton3.UseVisualStyleBackColor = True
+        '
+        'RadioButton4
+        '
+        Me.RadioButton4.AutoSize = True
+        Me.RadioButton4.Location = New System.Drawing.Point(173, 90)
+        Me.RadioButton4.Name = "RadioButton4"
+        Me.RadioButton4.Size = New System.Drawing.Size(39, 17)
+        Me.RadioButton4.TabIndex = 18
+        Me.RadioButton4.TabStop = True
+        Me.RadioButton4.Text = "No"
+        Me.RadioButton4.UseVisualStyleBackColor = True
         '
         'Form3
         '
@@ -124,9 +195,15 @@ Partial Class Form3
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.Control
         Me.ClientSize = New System.Drawing.Size(271, 179)
-        Me.Controls.Add(Me.TextBox4)
+        Me.Controls.Add(Me.RadioButton3)
+        Me.Controls.Add(Me.RadioButton4)
+        Me.Controls.Add(Me.RadioButton2)
+        Me.Controls.Add(Me.RadioButton1)
+        Me.Controls.Add(Me.Label5)
+        Me.Controls.Add(Me.TextBox5)
+        Me.Controls.Add(Me.Label4)
+        Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.TextBox3)
-        Me.Controls.Add(Me.TextBox2)
         Me.Controls.Add(Me.Button4)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Button3)
@@ -150,7 +227,13 @@ Partial Class Form3
     Friend WithEvents Button3 As Button
     Friend WithEvents Label2 As Label
     Friend WithEvents Button4 As Button
-    Friend WithEvents TextBox2 As TextBox
     Friend WithEvents TextBox3 As TextBox
-    Friend WithEvents TextBox4 As TextBox
+    Friend WithEvents Label3 As Label
+    Friend WithEvents Label4 As Label
+    Friend WithEvents TextBox5 As TextBox
+    Friend WithEvents Label5 As Label
+    Friend WithEvents RadioButton1 As RadioButton
+    Friend WithEvents RadioButton2 As RadioButton
+    Friend WithEvents RadioButton3 As RadioButton
+    Friend WithEvents RadioButton4 As RadioButton
 End Class

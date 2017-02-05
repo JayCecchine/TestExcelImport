@@ -44,9 +44,9 @@
         Button2.Hide()
         Button3.Hide()
         Label2.Hide()
-        TextBox2.Hide()
+        'TextBox2.Hide()
         TextBox3.Hide()
-        TextBox4.Hide()
+        'TextBox4.Hide()
     End Sub
     Private Sub TextBox_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles TextBox1.KeyPress
         If Not Char.IsNumber(e.KeyChar) AndAlso Not Char.IsControl(e.KeyChar) AndAlso Not e.KeyChar = "." Then
@@ -88,18 +88,24 @@
         Dim v = vbNewLine
         Dim buildThis As String
         Dim delCapVal As String = TextBox1.Text.ToString
+        Dim taxDelVal As String
         Dim catCapVal As String = ""
-        Dim taxDelVal As String = TextBox3.text.ToString
-        Dim Taxcatval As String = TextBox4.text.ToString
+        Dim Taxcatval As String
+        Dim pin As String = TextBox5.Text.ToString
 
-        If delCapVal.Length > 0 And taxDelVal.Length > 0 And Taxcatval.Length > 0 Then
-            buildThis = String.Format("USE PDQPOS" & v &
+        If RadioButton1.Checked = True Then
+            taxDelVal = "True"
+        End If
+
+        If pin = "4879" Then
+            If delCapVal.Length > 0 And taxDelVal.Length > 0 And Taxcatval.Length > 0 Then
+                buildThis = String.Format("USE PDQPOS" & v &
             "GO" & v &
             "UPDATE tblconfigmain SET optvalue='False' WHERE optname='LegacyOrderCalc' AND optgroup='AdvOrderCalc'" & v &
             "UPDATE tblconfigmain SET optvalue='True' WHERE optname='AdvDelChargePerItem' AND optgroup='AdvOrderCalc'" & v &
             "UPDATE tblconfigmain SET optvalue='{0}' WHERE optname='AdvDelChargeMax' AND optgroup='AdvOrderCalc'" & v &
             "--UPDATE tblconfigmain SET optvalue='{1}' WHERE optname='AdvDelCaterChargeMax' AND" & v &
-            "optgroup='AdvOrderCalc'" & v &
+            "--optgroup='AdvOrderCalc'" & v &
             "UPDATE tblconfigmain SET optvalue='True' WHERE optname='JJAdvancedView' AND optgroup='MenuEntry'" & v &
             "UPDATE tblConfigMain SET OptValue = 'True'  WHERE OptName = 'AdvancedOOAPI' AND OptGroup='OnlineOrdering'" & v &
             "UPDATE [PDQPOS].[dbo].[tblDescTransType] SET [DescItemPriceIndex]=1" & v &
@@ -164,11 +170,16 @@
                  "INNER JOIN tblDelayOrders ON tblDelayOrders.OrderID=ITM.OrderID" & v &
                  "WHERE ITM.ItemID NOT IN (SELECT [ItemUID] FROM tblDelayOrderItemExtend) AND tblDelayOrders.Settled=0", delCapVal, catCapVal, taxDelVal, Taxcatval)
 
-            Form1.NoteStart(buildThis)
+                Form1.NoteStart(buildThis)
+            Else
+                MsgBox("Enter a value.")
+                Exit Sub
+            End If
         Else
-            MsgBox("Enter a value.")
+            MsgBox("Access Denied")
             Exit Sub
         End If
+
 
         Close()
     End Sub
@@ -182,11 +193,17 @@
                 Button2.Show()
                 Button3.Hide()
                 Button4.Hide()
-                TextBox2.Hide()
-                TextBox3.Hide()
-                TextBox4.Hide()
                 AcceptButton = Button2
                 Label2.Hide()
+                Label4.Hide()
+                Label5.Hide()
+                RadioButton1.Hide()
+                RadioButton2.Hide()
+                RadioButton3.Hide()
+                RadioButton4.Hide()
+                TextBox3.Hide()
+                TextBox5.Hide()
+
                 Label1.Text = "Flat Fee:"
                 Label2.Location = New Point(25, 96)
                 Label1.Location = New Point(107, 58)
@@ -199,7 +216,19 @@
         End Select
     End Sub
 
+    Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
 
+    End Sub
 
+    Private Sub Label4_Click(sender As Object, e As EventArgs) Handles Label4.Click
 
+    End Sub
+
+    Private Sub Label1_Click(sender As Object, e As EventArgs) Handles Label1.Click
+
+    End Sub
+
+    Private Sub RadioButton2_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton2.CheckedChanged
+
+    End Sub
 End Class

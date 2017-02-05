@@ -16,6 +16,12 @@ Public Class Form1
     <DllImport("user32.dll")>
     Private Shared Function SendMessage(hWnd As IntPtr, Msg As Integer, wParam As IntPtr, <MarshalAs(UnmanagedType.LPStr)> lParam As String) As IntPtr
     End Function
+
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Button3.Hide()
+        APManual()
+    End Sub
+
     Public Sub NoteStart(getString As String)
         'copy to clipboard
 
@@ -105,11 +111,6 @@ Public Class Form1
         Button3.Show()
         Dim s = returnSet.Tables(0)
 
-        'If s.Rows(1).Item(1) IsNot "" Then         'And s.Rows(1).Item(1) > 0 Then
-        '    TextBox2.Text = String.Format("Update tblmenuitems Set price1 = '{0}' where itemnum in (100-111)", s.Rows(1).Item(1))
-        'End If
-
-
         Dim modTable As New System.Data.DataTable
         Dim r = returnSet.Tables(0)
         Dim newCol = New DataColumn
@@ -149,33 +150,8 @@ Public Class Form1
 
         modSet.Tables.Add(modTable)
 
-
-
-
-
-        'Dim Temp As New Form
-        'Dim Grid As New DataGridView
-        'Grid.DataSource = modSet.Tables(0).DefaultView
-
-        'Temp.Show(Grid)
-
-
         DataGridView1.DataSource = modSet.Tables(0).DefaultView
 
-        'DataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
-        'DataGridView1.AutoResizeColumns()
-
-        '    modSet.Tables(0).GetChanges()
-        '    modSet.Tables(0).AcceptChanges()
-
-
-
-
-        'Parse Excel File for values, add them if they're not null or 0
-        'associate them with variables
-        'compile variables into a data table that is user friendly
-        '   ask user if data is correct, if not, allow for user to override pre-existing values
-        '       Take new acquired data from data table, generate necessary scripts for end user
     End Sub
 
 
@@ -189,10 +165,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Button3.Hide()
-        APManual()
-    End Sub
+
 
 
 
