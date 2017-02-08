@@ -1028,6 +1028,45 @@ Public Class Form1
             MsgBox("What.. did you DO.")
         End Try
     End Sub
+    Sub RemoveCatGroups()
+        Dim v = vbNewLine
+        Dim removeCat = String.Format("use PDQPOS" & v &
+        "go" & v &
+        "--REMOVE CATERING GROUPS--" & v &
+        "update tblMenuGroups set CateringGroup='0' where CateringGroup='1' and GroupID IN (11,12,21,22,23,24,25,95)" & v &
+        "--DELETE GROUP 95--" & v &
+        "DELETE from tblMenuGroups where GroupID='95'" & v &
+        "--DELETE GROUP -1 IF EXISTS--" & v &
+        "DELETE from tblMenuGroups where GroupID='-1'" & v &
+        "--RECREATE GROUP -1 IF NOT EXISTS--" & v &
+        "INSERT INTO dbo.tblMenuGroups" & v &
+          "([GroupID]" & v &
+          ",[GroupName]" & v &
+          ",[CateringGroup]" & v &
+          ",[CateringCharge]" & v &
+          ",[CateringQty]" & v &
+          ",[WarnDriver]" & v &
+          ",[PassProtect]" & v &
+          ",[IsDiscount]" & v &
+          ",[ExcludePrint]" & v &
+          ",[BarGroup]" & v &
+          ",[UniqueID]" & v &
+          ",[Active])" & v &
+      "VALUES" & v &
+           "('-1'" & v &
+          ",'Catering'" & v &
+          ",'1'" & v &
+          ",'0.00'" & v &
+          ",'1'" & v &
+          ",'0'" & v &
+          ",'0'" & v &
+          ",'0'" & v &
+          ",'0'" & v &
+          ",'0'" & v &
+          ",NEWID()" & v &
+          ",'1')")
+        Clipboard.SetDataObject(removeCat)
+    End Sub
 
 End Class
 

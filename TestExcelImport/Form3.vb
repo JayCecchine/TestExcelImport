@@ -17,9 +17,7 @@
         Dim v = vbNewLine
         Dim flatFee As String
         Dim flatFeeVal As String = TextBox1.Text.ToString
-        'Select Case flatFeeVal
-        '    Case ""
-        '        MsgBox("Enter something, Dumbass")
+
         If flatFeeVal.Length > 0 Then
             flatFee = String.Format("use pdqpos" & v & "go" & v & "--Resets all Del charges to 0--" &
                  v & "UPDATE tblMenuItemExtend SET DelCharge='0.00'" & v & "--UPDATE TAX ON DELIVERY FEE--" &
@@ -48,7 +46,12 @@
         TextBox3.Hide()
         'TextBox4.Hide()
     End Sub
-    Private Sub TextBox_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles TextBox1.KeyPress
+    Private Sub TextBox1_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles TextBox1.KeyPress
+        If Not Char.IsNumber(e.KeyChar) AndAlso Not Char.IsControl(e.KeyChar) AndAlso Not e.KeyChar = "." Then
+            e.Handled = True
+        End If
+    End Sub
+    Private Sub TextBox5_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles TextBox5.KeyPress
         If Not Char.IsNumber(e.KeyChar) AndAlso Not Char.IsControl(e.KeyChar) AndAlso Not e.KeyChar = "." Then
             e.Handled = True
         End If
@@ -95,6 +98,13 @@
 
         If RadioButton1.Checked = True Then
             taxDelVal = "True"
+        ElseIf RadioButton2.Checked = True Then
+            taxDelVal = "False"
+        End If
+        If RadioButton3.Checked = True Then
+            Taxcatval = "True"
+        ElseIf RadioButton4.Checked = True Then
+            Taxcatval = "False"
         End If
 
         If pin = "4879" Then
@@ -183,7 +193,28 @@
 
         Close()
     End Sub
+    Private Sub TaxDelCharge()
+        Dim v = vbNewLine
+        Dim taxThis As String
+        Dim taxDelVal As String
+        Dim pin As String = TextBox5.Text.ToString
 
+        If RadioButton1.Checked = True Then
+            taxDelVal = "True"
+        ElseIf RadioButton2.Checked = True Then
+            taxDelVal = "False"
+        End If
+
+        taxThis = String.Format("use pdqpos" & v &
+        "go" & v &
+        "Update tblconfigmain set optvalue = '{0}'" & v &
+        "where optname = 'taxdeliverycharge'" & v &
+        "Update() tblmenuitemextend set taxdelcharge = '{0}'" & v &
+        "Where TransTypeID In(3, 9)", taxDelVal)
+
+        Form1.NoteStart(taxThis)
+        Close()
+    End Sub
     Sub FormAdjust(getString As String)
         Select Case getString
             Case = "Flat"
@@ -193,16 +224,22 @@
                 Button2.Show()
                 Button3.Hide()
                 Button4.Hide()
+                Button5.Hide()
                 AcceptButton = Button2
+                Label1.Show()
                 Label2.Hide()
+                Label3.Hide()
                 Label4.Hide()
                 Label5.Hide()
                 RadioButton1.Hide()
                 RadioButton2.Hide()
                 RadioButton3.Hide()
                 RadioButton4.Hide()
+                TextBox1.Show()
                 TextBox3.Hide()
                 TextBox5.Hide()
+                GroupBox1.Hide()
+                GroupBox2.Hide()
 
                 Label1.Text = "Flat Fee:"
                 Label2.Location = New Point(25, 96)
@@ -213,6 +250,144 @@
                 Button3.Location = New Point(94, 118)
                 Button4.Location = New Point(94, 118)
                 TextBox1.Location = New Point(82, 74)
+
+            Case = "Build"
+                Show()
+                Label1.Show()
+                Label2.Hide()
+                Label3.Hide()
+                Label4.Hide()
+                Label5.Show()
+                RadioButton1.Show()
+                RadioButton2.Show()
+                RadioButton3.Show()
+                RadioButton4.Show()
+                TextBox1.Show()
+                TextBox3.Hide()
+                TextBox5.Show()
+                Button1.Hide()
+                Button2.Hide()
+                Button3.Hide()
+                Button4.Show()
+                Button5.Hide()
+                GroupBox1.Show()
+                GroupBox2.Show()
+
+                RadioButton1.Checked = True
+                RadioButton3.Checked = True
+
+                Text = "Build MenuItemExtend"
+                Label1.Text = "Delivery Cap:"
+                Label2.Text = "Tax Delivery (Yes/No):"
+                Label4.Text = "Tax Catering (Yes/No):"
+                Label5.Text = "PIN:"
+                Label1.Location = New Point(56, 15)
+                Label2.Location = New Point(10, 73)
+                Label4.Location = New Point(10, 91)
+                Label5.Location = New Point(18, 135)
+                TextBox1.Location = New Point(126, 12)
+                GroupBox1.Location = New Point(94, 36)
+                GroupBox2.Location = New Point(94, 81)
+                'TextBox2.Location = New Point(124, 64)
+                'TextBox4.Location = New Point(124, 89)
+                TextBox5.Location = New Point(52, 132)
+                Button1.Location = New Point(94, 130)
+                Button2.Location = New Point(94, 130)
+                Button3.Location = New Point(94, 130)
+                Button4.Location = New Point(94, 130)
+
+                AcceptButton = Button4
+
+            Case = "EmpDisc"
+                Show()
+                Text = "Emp Discount"
+                Label1.Text = "Discount:"
+                Label1.Show()
+                Label2.Show()
+                Label2.Text = "Set percentage as a decimal (50% = .5)"
+                Label3.Hide()
+                Label4.Hide()
+                Label5.Hide()
+                RadioButton1.Hide()
+                RadioButton2.Hide()
+                RadioButton3.Hide()
+                RadioButton4.Hide()
+                TextBox1.Show()
+                TextBox3.Hide()
+                TextBox5.Hide()
+                Button1.Hide()
+                Button2.Hide()
+                Button4.Hide()
+                Button3.Show()
+                Button5.Hide()
+                GroupBox1.Hide()
+                GroupBox2.Hide()
+                Label2.Location = New Point(25, 96)
+                Label1.Location = New Point(107, 58)
+                Label2.Location = New Point(25, 96)
+                Button1.Location = New Point(94, 118)
+                Button2.Location = New Point(94, 118)
+                Button3.Location = New Point(94, 118)
+                Button4.Location = New Point(94, 118)
+                TextBox1.Location = New Point(82, 74)
+                AcceptButton = Button3
+
+            Case = "Wheat"
+                Show()
+                Text = "Wheat"
+                Label1.Text = "Price 1:"
+                Label1.Location = New Point(107, 58)
+                Label2.Location = New Point(107, 97)
+                Label1.Show()
+                Label2.Hide()
+                Label3.Hide()
+                Label4.Hide()
+                Label5.Hide()
+                RadioButton1.Hide()
+                RadioButton2.Hide()
+                RadioButton3.Hide()
+                RadioButton4.Hide()
+                TextBox1.Show()
+                TextBox3.Hide()
+                TextBox5.Hide()
+                Button1.Show()
+                Button2.Hide()
+                Button3.Hide()
+                Button4.Hide()
+                Button5.Hide()
+                GroupBox1.Hide()
+                GroupBox2.Hide()
+
+                Button1.Location = New Point(94, 118)
+                Button2.Location = New Point(94, 118)
+                Button3.Location = New Point(94, 118)
+                Button4.Location = New Point(94, 118)
+                TextBox1.Location = New Point(82, 74)
+
+
+                AcceptButton = Button1
+            Case = "TaxDelCap"
+                Show()
+                Text = "Tax Delivery Cap"
+                Button1.hide()
+                Button2.Hide()
+                Button3.Hide()
+                Button4.Hide()
+                Button5.Show()
+                RadioButton1.Show()
+                RadioButton2.Show()
+                GroupBox1.Show()
+                GroupBox2.Hide()
+                TextBox1.Hide()
+                TextBox3.Hide()
+                TextBox5.Hide()
+                Label1.Hide()
+                Label2.Hide()
+                Label3.Hide()
+                Label4.Hide()
+                Label5.Hide()
+                GroupBox1.Location = New Point(100, 52)
+                Button5.Location = New Point(100, 112)
         End Select
     End Sub
 
@@ -230,5 +405,21 @@
 
     Private Sub RadioButton2_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton2.CheckedChanged
 
+    End Sub
+
+    Private Sub RadioButton4_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton4.CheckedChanged
+
+    End Sub
+
+    Private Sub GroupBox1_Enter(sender As Object, e As EventArgs)
+
+    End Sub
+
+    Private Sub TextBox3_TextChanged(sender As Object, e As EventArgs) Handles TextBox3.TextChanged
+
+    End Sub
+
+    Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
+        TaxDelCharge()
     End Sub
 End Class
