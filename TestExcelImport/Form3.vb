@@ -209,7 +209,7 @@
         "go" & v &
         "Update tblconfigmain set optvalue = '{0}'" & v &
         "where optname = 'taxdeliverycharge'" & v &
-        "Update() tblmenuitemextend set taxdelcharge = '{0}'" & v &
+        "Update tblmenuitemextend set taxdelcharge = '{0}'" & v &
         "Where TransTypeID In(3, 9)", taxDelVal)
 
         Form1.NoteStart(taxThis)

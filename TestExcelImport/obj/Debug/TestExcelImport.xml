@@ -22,5 +22,40 @@ TestExcelImport
   resource lookups using this strongly typed resource class.
 </summary>
 </member>
+<member name="T:TestExcelImport.DataSet1">
+<summary>
+Represents a strongly typed in-memory cache of data.
+</summary>
+</member>
+<member name="T:TestExcelImport.DataSet1.APDataTable">
+<summary>
+Represents the strongly named DataTable class.
+</summary>
+</member>
+<member name="T:TestExcelImport.DataSet1.DataTable2DataTable">
+<summary>
+Represents the strongly named DataTable class.
+</summary>
+</member>
+<member name="T:TestExcelImport.DataSet1.APRow">
+<summary>
+Represents strongly named DataRow class.
+</summary>
+</member>
+<member name="T:TestExcelImport.DataSet1.DataTable2Row">
+<summary>
+Represents strongly named DataRow class.
+</summary>
+</member>
+<member name="T:TestExcelImport.DataSet1.APRowChangeEvent">
+<summary>
+Row event argument class
+</summary>
+</member>
+<member name="T:TestExcelImport.DataSet1.DataTable2RowChangeEvent">
+<summary>
+Row event argument class
+</summary>
+</member>
 </members>
 </doc>

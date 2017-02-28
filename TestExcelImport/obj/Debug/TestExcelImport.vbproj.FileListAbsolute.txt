@@ -26,3 +26,4 @@ C:\Users\Jason.Cecchine\Source\Repos\TestExcelImport\TestExcelImport\obj\Debug\T
 C:\Users\Jason.Cecchine\Source\Repos\TestExcelImport\TestExcelImport\obj\Debug\TestExcelImport.Form3.resources
 C:\Users\Jason.Cecchine\Source\Repos\TestExcelImport\TestExcelImport\obj\Debug\TestExcelImport.Resources.resources
 C:\Users\Jason.Cecchine\Source\Repos\TestExcelImport\TestExcelImport\obj\Debug\TestExcelImport.vbproj.GenerateResource.Cache
+C:\Users\Jason.Cecchine\Source\Repos\TestExcelImport\TestExcelImport\obj\Debug\TestExcelImport.Form4.resources

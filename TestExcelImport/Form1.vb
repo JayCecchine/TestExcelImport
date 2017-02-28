@@ -9,7 +9,7 @@ Public Class Form1
     Dim modSet As New DataSet
     Dim regPrice As String
     Dim catPrice As String
-    'greenLight is for telling the program whether or not ExcelConverter ran successfully
+    'greenLight is telling the program whether or not ExcelConverter ran successfully
     Dim greenLight As Integer = 0
     Const WM_SETTEXT As Integer = &HC
 
@@ -435,7 +435,7 @@ Public Class Form1
         End If
         If m.Rows(16).Item(2).ToString() IsNot "" Then
             regFee(16) = String.Format("--Cookies--" & vbNewLine & d & "where itemnum in (215,216,676) and TransTypeID IN (3,9)" & vbNewLine, m.Rows(16).Item(2).ToString())
-            'Else
+        Else
             regFee(16) = ""
         End If
 
